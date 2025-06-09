@@ -1,5 +1,6 @@
 
 import { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export interface ThemeConfig {
   primaryColor: string;
@@ -23,6 +24,8 @@ const defaultTheme: ThemeConfig = {
 
 export const useThemeCustomization = () => {
   const [theme, setTheme] = useState<ThemeConfig>(defaultTheme);
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const hexToRgb = (hex: string): string => {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -35,13 +38,54 @@ export const useThemeCustomization = () => {
     return `${r} ${g} ${b}`;
   };
 
+  const parseColorsFromPath = (pathname: string): Partial<ThemeConfig> | null => {
+    const colorPattern = /^\/([a-fA-F0-9]{6})-([a-fA-F0-9]{6})-([a-fA-F0-9]{6})-([a-fA-F0-9]{6})-([a-fA-F0-9]{6})-([a-fA-F0-9]{6})$/;
+    const match = pathname.match(colorPattern);
+    
+    if (match) {
+      return {
+        primaryColor: `#${match[1]}`,
+        secondaryColor: `#${match[2]}`,
+        accentColor: `#${match[3]}`,
+        textColor: `#${match[4]}`,
+        backgroundColor: `#${match[5]}`,
+        borderColor: `#${match[6]}`
+      };
+    }
+    
+    return null;
+  };
+
+  const generateShareableUrl = (themeConfig: ThemeConfig): string => {
+    const baseUrl = window.location.origin;
+    const colors = [
+      themeConfig.primaryColor.replace('#', ''),
+      themeConfig.secondaryColor.replace('#', ''),
+      themeConfig.accentColor.replace('#', ''),
+      themeConfig.textColor.replace('#', ''),
+      themeConfig.backgroundColor.replace('#', ''),
+      themeConfig.borderColor.replace('#', '')
+    ].join('-');
+    
+    return `${baseUrl}/${colors}`;
+  };
+
   const updateTheme = (newTheme: Partial<ThemeConfig>) => {
     setTheme(prev => ({ ...prev, ...newTheme }));
   };
 
   const resetTheme = () => {
     setTheme(defaultTheme);
+    navigate('/');
   };
+
+  // Load theme from URL on component mount
+  useEffect(() => {
+    const colorsFromPath = parseColorsFromPath(location.pathname);
+    if (colorsFromPath) {
+      setTheme(prev => ({ ...prev, ...colorsFromPath }));
+    }
+  }, [location.pathname]);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -68,6 +112,7 @@ export const useThemeCustomization = () => {
   return {
     theme,
     updateTheme,
-    resetTheme
+    resetTheme,
+    generateShareableUrl
   };
 };

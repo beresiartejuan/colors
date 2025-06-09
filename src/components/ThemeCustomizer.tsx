@@ -1,17 +1,19 @@
+
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { Palette, RotateCcw, Settings, X, Code, Copy, Check } from 'lucide-react';
+import { Palette, RotateCcw, Settings, X, Code, Copy, Check, Share } from 'lucide-react';
 import { useThemeCustomization, ThemeConfig } from '@/hooks/useThemeCustomization';
 
 const ThemeCustomizer: React.FC = () => {
-  const { theme, updateTheme, resetTheme } = useThemeCustomization();
+  const { theme, updateTheme, resetTheme, generateShareableUrl } = useThemeCustomization();
   const [isOpen, setIsOpen] = useState(false);
   const [isCssOpen, setIsCssOpen] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [linkCopied, setLinkCopied] = useState(false);
 
   const handleColorChange = (key: keyof ThemeConfig, value: string) => {
     updateTheme({ [key]: value });
@@ -46,6 +48,17 @@ const ThemeCustomizer: React.FC = () => {
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
       console.error('Error copying to clipboard:', err);
+    }
+  };
+
+  const copyShareableLink = async () => {
+    try {
+      const shareableUrl = generateShareableUrl(theme);
+      await navigator.clipboard.writeText(shareableUrl);
+      setLinkCopied(true);
+      setTimeout(() => setLinkCopied(false), 2000);
+    } catch (err) {
+      console.error('Error copying link to clipboard:', err);
     }
   };
 
@@ -165,22 +178,47 @@ const ThemeCustomizer: React.FC = () => {
                   </div>
                 </div>
 
-                <Button
-                  onClick={copyToClipboard}
-                  className="w-full bg-emerald-600 text-white hover:bg-emerald-700"
-                >
-                  {copied ? (
-                    <>
-                      <Check className="w-4 h-4 mr-2" />
-                      ¡Copiado!
-                    </>
-                  ) : (
-                    <>
-                      <Copy className="w-4 h-4 mr-2" />
-                      Copiar Configuración
-                    </>
-                  )}
-                </Button>
+                <div className="space-y-3">
+                  <Button
+                    onClick={copyToClipboard}
+                    className="w-full bg-emerald-600 text-white hover:bg-emerald-700"
+                  >
+                    {copied ? (
+                      <>
+                        <Check className="w-4 h-4 mr-2" />
+                        ¡CSS Copiado!
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-4 h-4 mr-2" />
+                        Copiar Configuración CSS
+                      </>
+                    )}
+                  </Button>
+
+                  <Button
+                    onClick={copyShareableLink}
+                    variant="outline"
+                    className="w-full border-indigo-300 text-indigo-700 hover:bg-indigo-50"
+                  >
+                    {linkCopied ? (
+                      <>
+                        <Check className="w-4 h-4 mr-2" />
+                        ¡Link Copiado!
+                      </>
+                    ) : (
+                      <>
+                        <Share className="w-4 h-4 mr-2" />
+                        Copiar Link Compartible
+                      </>
+                    )}
+                  </Button>
+                </div>
+
+                <div className="text-xs text-gray-500 bg-gray-50 p-3 rounded-lg">
+                  <p className="font-medium mb-1">Link actual:</p>
+                  <p className="break-all text-gray-600">{generateShareableUrl(theme)}</p>
+                </div>
               </CardContent>
             </Card>
           </div>
