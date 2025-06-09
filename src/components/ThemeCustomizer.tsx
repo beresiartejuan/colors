@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -64,20 +63,10 @@ const ThemeCustomizer: React.FC = () => {
 
   return (
     <>
-      {/* Desktop Toggle Button */}
+      {/* Floating Button - All Screens */}
       <Button
         onClick={() => setIsOpen(true)}
-        className="hidden md:block fixed top-4 right-4 z-50 bg-indigo-600 text-white shadow-lg hover:bg-indigo-700 text-sm md:text-base"
-        size="sm"
-      >
-        <Settings className="w-4 h-4 mr-1 md:mr-2" />
-        Personalizar
-      </Button>
-
-      {/* Mobile Floating Button */}
-      <Button
-        onClick={() => setIsOpen(true)}
-        className="md:hidden fixed bottom-6 right-6 z-50 bg-indigo-600 text-white shadow-lg hover:bg-indigo-700 rounded-full w-14 h-14 p-0"
+        className="fixed bottom-6 right-6 z-50 bg-indigo-600 text-white shadow-lg hover:bg-indigo-700 rounded-full w-14 h-14 p-0"
       >
         <Settings className="w-6 h-6" />
       </Button>
