@@ -1,8 +1,10 @@
+
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Palette, RotateCcw, Settings, X } from 'lucide-react';
 import { useThemeCustomization, ThemeConfig } from '@/hooks/useThemeCustomization';
 
@@ -62,14 +64,21 @@ const ThemeCustomizer: React.FC = () => {
   ];
 
   return (
-    <>
-      {/* Floating Button - All Screens */}
-      <Button
-        onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 z-50 bg-indigo-600 text-white shadow-lg hover:bg-indigo-700 rounded-full w-14 h-14 p-0"
-      >
-        <Settings className="w-6 h-6" />
-      </Button>
+    <TooltipProvider>
+      {/* Floating Button with Tooltip - All Screens */}
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            onClick={() => setIsOpen(true)}
+            className="fixed bottom-6 right-6 z-50 bg-indigo-600 text-white shadow-lg hover:bg-indigo-700 rounded-full w-14 h-14 p-0"
+          >
+            <Settings className="w-6 h-6" />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent side="left" className="bg-gray-900 text-white border-gray-700">
+          <p>Personalizar colores de la página</p>
+        </TooltipContent>
+      </Tooltip>
 
       {/* Customizer Panel */}
       {isOpen && (
@@ -185,7 +194,7 @@ const ThemeCustomizer: React.FC = () => {
           </div>
         </div>
       )}
-    </>
+    </TooltipProvider>
   );
 };
 
