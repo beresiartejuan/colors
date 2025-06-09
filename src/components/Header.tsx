@@ -15,7 +15,10 @@ const Header: React.FC = () => {
             <div className="w-8 h-8 rounded-full bg-gradient-to-r from-custom-primary to-custom-secondary flex items-center justify-center">
               <Palette className="w-4 h-4 text-white" />
             </div>
-            <h1 className="text-xl font-bold text-custom-text">Colors</h1>
+            <div className="flex flex-col">
+              <h1 className="text-xl font-bold text-custom-text">Colors</h1>
+              <p className="text-xs text-custom-text/60 hidden sm:block">Prueba paletas de colores</p>
+            </div>
           </div>
 
           {/* Desktop Navigation */}
