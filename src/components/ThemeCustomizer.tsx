@@ -67,21 +67,22 @@ const ThemeCustomizer: React.FC = () => {
       {/* Toggle Button */}
       <Button
         onClick={() => setIsOpen(true)}
-        className="fixed top-4 right-4 z-50 bg-indigo-600 text-white shadow-lg hover:bg-indigo-700"
+        className="fixed top-4 right-4 z-50 bg-indigo-600 text-white shadow-lg hover:bg-indigo-700 text-sm md:text-base"
         size="sm"
       >
-        <Settings className="w-4 h-4 mr-2" />
-        Personalizar
+        <Settings className="w-4 h-4 mr-1 md:mr-2" />
+        <span className="hidden sm:inline">Personalizar</span>
+        <span className="sm:hidden">✨</span>
       </Button>
 
       {/* Customizer Panel */}
       {isOpen && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm">
-          <div className="fixed right-0 top-0 h-full w-96 bg-white border-l border-gray-200 shadow-2xl overflow-y-auto">
+          <div className="fixed right-0 top-0 h-full w-full sm:w-96 bg-white border-l border-gray-200 shadow-2xl overflow-y-auto">
             <Card className="h-full rounded-none border-0">
-              <CardHeader className="border-b border-gray-200 bg-white">
+              <CardHeader className="border-b border-gray-200 bg-white sticky top-0 z-10">
                 <div className="flex items-center justify-between">
-                  <CardTitle className="text-gray-800 flex items-center gap-2">
+                  <CardTitle className="text-gray-800 flex items-center gap-2 text-lg md:text-xl">
                     <Palette className="w-5 h-5" />
                     Personalizar Colores
                   </CardTitle>
@@ -96,20 +97,20 @@ const ThemeCustomizer: React.FC = () => {
                 </div>
               </CardHeader>
               
-              <CardContent className="p-6 space-y-6 bg-white">
+              <CardContent className="p-4 md:p-6 space-y-6 bg-white">
                 {/* Preset Themes */}
                 <div>
                   <Label className="text-sm font-semibold text-gray-800 mb-3 block">
                     Temas Predefinidos
                   </Label>
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     {presetThemes.map((preset) => (
                       <Button
                         key={preset.name}
                         variant="outline"
                         size="sm"
                         onClick={() => updateTheme(preset.config)}
-                        className="text-xs h-auto p-2 border-gray-300 text-gray-700 hover:bg-gray-50"
+                        className="text-xs h-auto p-2 border-gray-300 text-gray-700 hover:bg-gray-50 text-center"
                       >
                         {preset.name}
                       </Button>
@@ -140,13 +141,13 @@ const ThemeCustomizer: React.FC = () => {
                           type="color"
                           value={theme[key as keyof ThemeConfig] as string}
                           onChange={(e) => handleColorChange(key as keyof ThemeConfig, e.target.value)}
-                          className="w-12 h-8 rounded border border-gray-300 cursor-pointer"
+                          className="w-10 md:w-12 h-8 rounded border border-gray-300 cursor-pointer flex-shrink-0"
                         />
                         <input
                           type="text"
                           value={theme[key as keyof ThemeConfig] as string}
                           onChange={(e) => handleColorChange(key as keyof ThemeConfig, e.target.value)}
-                          className="flex-1 px-3 py-1 text-sm border border-gray-300 rounded bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+                          className="flex-1 px-3 py-1 text-sm border border-gray-300 rounded bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 min-w-0"
                         />
                       </div>
                     </div>
