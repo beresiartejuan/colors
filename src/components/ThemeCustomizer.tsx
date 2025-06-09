@@ -1,19 +1,52 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { Palette, RotateCcw, Settings, X } from 'lucide-react';
+import { Palette, RotateCcw, Settings, X, Code, Copy, Check } from 'lucide-react';
 import { useThemeCustomization, ThemeConfig } from '@/hooks/useThemeCustomization';
 
 const ThemeCustomizer: React.FC = () => {
   const { theme, updateTheme, resetTheme } = useThemeCustomization();
   const [isOpen, setIsOpen] = useState(false);
+  const [isCssOpen, setIsCssOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   const handleColorChange = (key: keyof ThemeConfig, value: string) => {
     updateTheme({ [key]: value });
+  };
+
+  const generateCSSConfig = () => {
+    const fontMap: { [key: string]: string } = {
+      'Inter': "'Inter', sans-serif",
+      'Playfair Display': "'Playfair Display', serif",
+      'Roboto': "'Roboto', sans-serif",
+      'Open Sans': "'Open Sans', sans-serif"
+    };
+
+    return `:root {
+  /* Theme Colors */
+  --color-primary: ${theme.primaryColor};
+  --color-secondary: ${theme.secondaryColor};
+  --color-accent: ${theme.accentColor};
+  --color-border: ${theme.borderColor};
+  --color-text: ${theme.textColor};
+  --color-background: ${theme.backgroundColor};
+
+  /* Typography */
+  --font-family: ${fontMap[theme.fontFamily] || fontMap['Inter']};
+}`;
+  };
+
+  const copyToClipboard = async () => {
+    try {
+      await navigator.clipboard.writeText(generateCSSConfig());
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error('Error copying to clipboard:', err);
+    }
   };
 
   const presetThemes = [
@@ -65,20 +98,94 @@ const ThemeCustomizer: React.FC = () => {
 
   return (
     <TooltipProvider>
-      {/* Floating Button with Tooltip - All Screens */}
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Button
-            onClick={() => setIsOpen(true)}
-            className="fixed bottom-6 right-6 z-50 bg-indigo-600 text-white shadow-lg hover:bg-indigo-700 rounded-full w-14 h-14 p-0"
-          >
-            <Settings className="w-6 h-6" />
-          </Button>
-        </TooltipTrigger>
-        <TooltipContent side="left" className="bg-gray-900 text-white border-gray-700">
-          <p>Personalizar colores de la página</p>
-        </TooltipContent>
-      </Tooltip>
+      {/* Floating Buttons Container */}
+      <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-3">
+        {/* CSS Config Button */}
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              onClick={() => setIsCssOpen(true)}
+              className="bg-emerald-600 text-white shadow-lg hover:bg-emerald-700 rounded-full w-14 h-14 p-0"
+            >
+              <Code className="w-6 h-6" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent side="left" className="bg-gray-900 text-white border-gray-700">
+            <p>Ver configuración CSS</p>
+          </TooltipContent>
+        </Tooltip>
+
+        {/* Theme Customizer Button */}
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              onClick={() => setIsOpen(true)}
+              className="bg-indigo-600 text-white shadow-lg hover:bg-indigo-700 rounded-full w-14 h-14 p-0"
+            >
+              <Settings className="w-6 h-6" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent side="left" className="bg-gray-900 text-white border-gray-700">
+            <p>Personalizar colores de la página</p>
+          </TooltipContent>
+        </Tooltip>
+      </div>
+
+      {/* CSS Config Panel */}
+      {isCssOpen && (
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm">
+          <div className="fixed right-0 top-0 h-full w-full sm:w-96 bg-white border-l border-gray-200 shadow-2xl overflow-y-auto">
+            <Card className="h-full rounded-none border-0">
+              <CardHeader className="border-b border-gray-200 bg-white sticky top-0 z-10">
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-gray-800 flex items-center gap-2 text-lg md:text-xl">
+                    <Code className="w-5 h-5" />
+                    Configuración CSS
+                  </CardTitle>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setIsCssOpen(false)}
+                    className="text-gray-600 hover:bg-gray-100"
+                  >
+                    <X className="w-4 h-4" />
+                  </Button>
+                </div>
+              </CardHeader>
+              
+              <CardContent className="p-4 md:p-6 space-y-6 bg-white">
+                <div>
+                  <Label className="text-sm font-semibold text-gray-800 mb-3 block">
+                    Variables CSS Actuales
+                  </Label>
+                  <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 font-mono text-sm overflow-x-auto">
+                    <pre className="whitespace-pre-wrap text-gray-800">
+                      {generateCSSConfig()}
+                    </pre>
+                  </div>
+                </div>
+
+                <Button
+                  onClick={copyToClipboard}
+                  className="w-full bg-emerald-600 text-white hover:bg-emerald-700"
+                >
+                  {copied ? (
+                    <>
+                      <Check className="w-4 h-4 mr-2" />
+                      ¡Copiado!
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-4 h-4 mr-2" />
+                      Copiar Configuración
+                    </>
+                  )}
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      )}
 
       {/* Customizer Panel */}
       {isOpen && (
