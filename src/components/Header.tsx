@@ -37,7 +37,7 @@ const Header: React.FC = () => {
             </a>
           </div>
 
-          {/* CTA Buttons - Desktop */}
+          {/* Desktop Right Side - CTA Buttons + Customizer */}
           <div className="hidden md:flex items-center space-x-4">
             <Button 
               variant="outline" 
@@ -53,7 +53,7 @@ const Header: React.FC = () => {
           {/* Mobile Menu Button */}
           <Button 
             variant="ghost" 
-            className="lg:hidden text-custom-text"
+            className="md:hidden text-custom-text"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
             {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -62,7 +62,7 @@ const Header: React.FC = () => {
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="lg:hidden mt-4 pb-4 border-t border-custom-border">
+          <div className="md:hidden mt-4 pb-4 border-t border-custom-border">
             <div className="flex flex-col space-y-4 pt-4">
               <a 
                 href="#inicio" 

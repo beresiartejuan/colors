@@ -64,15 +64,22 @@ const ThemeCustomizer: React.FC = () => {
 
   return (
     <>
-      {/* Toggle Button */}
+      {/* Desktop Toggle Button */}
       <Button
         onClick={() => setIsOpen(true)}
-        className="fixed top-4 right-4 z-50 bg-indigo-600 text-white shadow-lg hover:bg-indigo-700 text-sm md:text-base"
+        className="hidden md:block fixed top-4 right-4 z-50 bg-indigo-600 text-white shadow-lg hover:bg-indigo-700 text-sm md:text-base"
         size="sm"
       >
         <Settings className="w-4 h-4 mr-1 md:mr-2" />
-        <span className="hidden sm:inline">Personalizar</span>
-        <span className="sm:hidden">✨</span>
+        Personalizar
+      </Button>
+
+      {/* Mobile Floating Button */}
+      <Button
+        onClick={() => setIsOpen(true)}
+        className="md:hidden fixed bottom-6 right-6 z-50 bg-indigo-600 text-white shadow-lg hover:bg-indigo-700 rounded-full w-14 h-14 p-0"
+      >
+        <Settings className="w-6 h-6" />
       </Button>
 
       {/* Customizer Panel */}
