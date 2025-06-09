@@ -67,7 +67,7 @@ const ThemeCustomizer: React.FC = () => {
       {/* Toggle Button */}
       <Button
         onClick={() => setIsOpen(true)}
-        className="fixed top-4 right-4 z-50 bg-custom-primary text-white shadow-lg hover:opacity-90"
+        className="fixed top-4 right-4 z-50 bg-indigo-600 text-white shadow-lg hover:bg-indigo-700"
         size="sm"
       >
         <Settings className="w-4 h-4 mr-2" />
@@ -77,11 +77,11 @@ const ThemeCustomizer: React.FC = () => {
       {/* Customizer Panel */}
       {isOpen && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm">
-          <div className="fixed right-0 top-0 h-full w-96 bg-custom-bg border-l border-custom-border shadow-2xl overflow-y-auto">
+          <div className="fixed right-0 top-0 h-full w-96 bg-white border-l border-gray-200 shadow-2xl overflow-y-auto">
             <Card className="h-full rounded-none border-0">
-              <CardHeader className="border-b border-custom-border">
+              <CardHeader className="border-b border-gray-200 bg-white">
                 <div className="flex items-center justify-between">
-                  <CardTitle className="text-custom-text flex items-center gap-2">
+                  <CardTitle className="text-gray-800 flex items-center gap-2">
                     <Palette className="w-5 h-5" />
                     Personalizar Colores
                   </CardTitle>
@@ -89,17 +89,17 @@ const ThemeCustomizer: React.FC = () => {
                     variant="ghost"
                     size="sm"
                     onClick={() => setIsOpen(false)}
-                    className="text-custom-text hover:bg-custom-border/20"
+                    className="text-gray-600 hover:bg-gray-100"
                   >
                     <X className="w-4 h-4" />
                   </Button>
                 </div>
               </CardHeader>
               
-              <CardContent className="p-6 space-y-6">
+              <CardContent className="p-6 space-y-6 bg-white">
                 {/* Preset Themes */}
                 <div>
-                  <Label className="text-sm font-semibold text-custom-text mb-3 block">
+                  <Label className="text-sm font-semibold text-gray-800 mb-3 block">
                     Temas Predefinidos
                   </Label>
                   <div className="grid grid-cols-2 gap-2">
@@ -109,7 +109,7 @@ const ThemeCustomizer: React.FC = () => {
                         variant="outline"
                         size="sm"
                         onClick={() => updateTheme(preset.config)}
-                        className="text-xs h-auto p-2 border-custom-border text-custom-text hover:bg-custom-border/20"
+                        className="text-xs h-auto p-2 border-gray-300 text-gray-700 hover:bg-gray-50"
                       >
                         {preset.name}
                       </Button>
@@ -119,7 +119,7 @@ const ThemeCustomizer: React.FC = () => {
 
                 {/* Color Controls */}
                 <div className="space-y-4">
-                  <Label className="text-sm font-semibold text-custom-text">
+                  <Label className="text-sm font-semibold text-gray-800">
                     Colores Personalizados
                   </Label>
                   
@@ -132,7 +132,7 @@ const ThemeCustomizer: React.FC = () => {
                     { key: 'backgroundColor', label: 'Color de Fondo' }
                   ].map(({ key, label }) => (
                     <div key={key} className="space-y-2">
-                      <Label className="text-xs text-custom-text/80">
+                      <Label className="text-xs text-gray-600">
                         {label}
                       </Label>
                       <div className="flex items-center space-x-2">
@@ -140,13 +140,13 @@ const ThemeCustomizer: React.FC = () => {
                           type="color"
                           value={theme[key as keyof ThemeConfig] as string}
                           onChange={(e) => handleColorChange(key as keyof ThemeConfig, e.target.value)}
-                          className="w-12 h-8 rounded border border-custom-border cursor-pointer"
+                          className="w-12 h-8 rounded border border-gray-300 cursor-pointer"
                         />
                         <input
                           type="text"
                           value={theme[key as keyof ThemeConfig] as string}
                           onChange={(e) => handleColorChange(key as keyof ThemeConfig, e.target.value)}
-                          className="flex-1 px-3 py-1 text-sm border border-custom-border rounded bg-custom-bg text-custom-text focus:outline-none focus:ring-2 focus:ring-custom-primary/50"
+                          className="flex-1 px-3 py-1 text-sm border border-gray-300 rounded bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
                         />
                       </div>
                     </div>
@@ -155,17 +155,17 @@ const ThemeCustomizer: React.FC = () => {
 
                 {/* Font Family */}
                 <div className="space-y-2">
-                  <Label className="text-sm font-semibold text-custom-text">
+                  <Label className="text-sm font-semibold text-gray-800">
                     Tipografía
                   </Label>
                   <Select
                     value={theme.fontFamily}
                     onValueChange={(value) => updateTheme({ fontFamily: value })}
                   >
-                    <SelectTrigger className="border-custom-border bg-custom-bg text-custom-text">
+                    <SelectTrigger className="border-gray-300 bg-white text-gray-800">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-white border-gray-300">
                       <SelectItem value="Inter">Inter (Sans-serif)</SelectItem>
                       <SelectItem value="Playfair Display">Playfair Display (Serif)</SelectItem>
                       <SelectItem value="Roboto">Roboto (Sans-serif)</SelectItem>
@@ -178,7 +178,7 @@ const ThemeCustomizer: React.FC = () => {
                 <Button
                   onClick={resetTheme}
                   variant="outline"
-                  className="w-full border-custom-border text-custom-text hover:bg-custom-border/20"
+                  className="w-full border-gray-300 text-gray-700 hover:bg-gray-50"
                 >
                   <RotateCcw className="w-4 h-4 mr-2" />
                   Restablecer Tema
