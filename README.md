@@ -118,4 +118,4 @@ Proyecto SPA configurado para Vercel (`vercel.json` reescribe todas las rutas a 
 
 ## 📄 License
 
-Por definir — aún no se incluye un archivo `LICENSE` en el repo.
+[MIT](LICENSE)
