@@ -53,7 +53,7 @@ const ThemeCustomizer: React.FC = () => {
 
   const copyShareableLink = async () => {
     try {
-      const shareableUrl = generateShareableUrl(theme);
+      const shareableUrl = generateShareableUrl();
       await navigator.clipboard.writeText(shareableUrl);
       setLinkCopied(true);
       setTimeout(() => setLinkCopied(false), 2000);
@@ -217,7 +217,7 @@ const ThemeCustomizer: React.FC = () => {
 
                 <div className="text-xs text-gray-500 bg-gray-50 p-3 rounded-lg">
                   <p className="font-medium mb-1">Link actual:</p>
-                  <p className="break-all text-gray-600">{generateShareableUrl(theme)}</p>
+                  <p className="break-all text-gray-600">{generateShareableUrl()}</p>
                 </div>
               </CardContent>
             </Card>
