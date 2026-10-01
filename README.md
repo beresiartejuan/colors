@@ -1,73 +1,54 @@
-# Welcome to your Lovable project
+# Colors
 
-## Project info
+Demo interactiva de **temas dinámicos**: personaliza colores y tipografía en vivo y comparte tu tema mediante una URL con la paleta serializada en el path.
 
-**URL**: https://lovable.dev/projects/9306539b-8125-4292-b85d-26e482933ac5
+## Stack
 
-## How can I edit this code?
+- Vite + React + TypeScript (plugin SWC)
+- Tailwind CSS v4 (plugin de Vite, configuración CSS-first)
+- shadcn/ui
+- TanStack Query
+- react-router-dom
 
-There are several ways of editing your application.
+## Getting started
 
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/9306539b-8125-4292-b85d-26e482933ac5) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
+Requisitos: Node.js 20+ y pnpm 10.
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+# 1. Instalar dependencias
+pnpm install
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+# 2. Levantar el servidor de desarrollo (puerto 8080)
+pnpm dev
 ```
 
-**Edit a file directly in GitHub**
+Otros scripts:
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+```sh
+pnpm build    # build de producción en dist/
+pnpm preview  # servir el build localmente
+pnpm lint     # eslint
+```
 
-**Use GitHub Codespaces**
+## Cómo funciona el sistema de temas
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+Un usuario abre el panel flotante (esquina inferior derecha), elige colores y fuente, y la interfaz se re-pinta al instante. El tema completo puede copiarse como URL o como snippet CSS.
 
-## What technologies are used for this project?
+El mecanismo está documentado en detalle en [`docs/COLORES_DINAMICOS.md`](docs/COLORES_DINAMICOS.md). Resumen del flujo:
 
-This project is built with:
+```
+updateTheme() (hook useThemeCustomization)
+  → hexToRgb() serializa cada color a canales RGB crudos ("99 102 241")
+  → useEffect escribe --custom-* en document.documentElement
+  → Tailwind consume rgb(var(--custom-*)) vía utilidades custom-*
+  → el navegador re-pinta sin recargar (transiciones de 300ms en index.css)
+```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+- **Estado**: `src/hooks/useThemeCustomization.ts`
+- **Variables CSS**: `:root` en `src/index.css`
+- **Panel de personalización**: `src/components/ThemeCustomizer.tsx`
+- **Ruta compartible**: `/:colors` en `App.tsx`, formato `/<primary>-<secondary>-<accent>-<text>-<bg>-<border>`
 
-## How can I deploy this project?
+## Deploy
 
-Simply open [Lovable](https://lovable.dev/projects/9306539b-8125-4292-b85d-26e482933ac5) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+Proyecto SPA configurado para Vercel (`vercel.json` reescribe todas las rutas a `index.html`), necesario para que los links de paletas compartidas resuelvan directo.
