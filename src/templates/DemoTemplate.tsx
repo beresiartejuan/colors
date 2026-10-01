@@ -1,16 +1,13 @@
-
-import React from 'react';
 import Header from '@/components/Header';
 import HeroSection from '@/components/HeroSection';
 import FeaturesSection from '@/components/FeaturesSection';
 import TestimonialsSection from '@/components/TestimonialsSection';
 import BlogSection from '@/components/BlogSection';
 import Footer from '@/components/Footer';
-import ThemeCustomizer from '@/components/ThemeCustomizer';
 
-const ColorPalette: React.FC = () => {
+const DemoTemplate = () => {
   return (
-    <div className="min-h-screen bg-custom-bg text-custom-text" style={{ fontFamily: 'var(--custom-font-family)' }}>
+    <div className="min-h-screen bg-custom-bg text-custom-text font-custom">
       <Header />
       <main>
         <HeroSection />
@@ -19,9 +16,8 @@ const ColorPalette: React.FC = () => {
         <BlogSection />
       </main>
       <Footer />
-      <ThemeCustomizer />
     </div>
   );
 };
 
-export default ColorPalette;
+export default DemoTemplate;

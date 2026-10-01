@@ -13,7 +13,7 @@ const Header: React.FC = () => {
           {/* Logo */}
           <div className="flex items-center space-x-2">
             <div className="w-8 h-8 rounded-full bg-gradient-to-r from-custom-primary to-custom-secondary flex items-center justify-center">
-              <Palette className="w-4 h-4 text-white" />
+              <Palette className="w-4 h-4 text-custom-gradient-contrast" />
             </div>
             <div className="flex flex-col">
               <h1 className="text-xl font-bold text-custom-text">Colors</h1>
@@ -44,11 +44,11 @@ const Header: React.FC = () => {
           <div className="hidden md:flex items-center space-x-4">
             <Button 
               variant="outline" 
-              className="border-custom-primary text-custom-primary hover:bg-custom-primary hover:text-white"
+              className="border-custom-primary text-custom-primary hover:bg-custom-primary hover:text-custom-primary-contrast"
             >
               Iniciar Sesión
             </Button>
-            <Button className="bg-custom-primary text-white hover:opacity-90">
+            <Button className="bg-custom-primary text-custom-primary-contrast hover:opacity-90">
               Comenzar Gratis
             </Button>
           </div>
@@ -105,11 +105,11 @@ const Header: React.FC = () => {
               <div className="flex flex-col space-y-3 pt-4">
                 <Button 
                   variant="outline" 
-                  className="border-custom-primary text-custom-primary hover:bg-custom-primary hover:text-white"
+                  className="border-custom-primary text-custom-primary hover:bg-custom-primary hover:text-custom-primary-contrast"
                 >
                   Iniciar Sesión
                 </Button>
-                <Button className="bg-custom-primary text-white hover:opacity-90">
+                <Button className="bg-custom-primary text-custom-primary-contrast hover:opacity-90">
                   Comenzar Gratis
                 </Button>
               </div>

@@ -118,12 +118,12 @@ const ThemeCustomizer: React.FC = () => {
           <TooltipTrigger asChild>
             <Button
               onClick={() => setIsCssOpen(true)}
-              className="bg-emerald-600 text-white shadow-lg hover:bg-emerald-700 rounded-full w-14 h-14 p-0"
+              className="bg-custom-accent text-custom-bg shadow-lg hover:opacity-90 rounded-full w-14 h-14 p-0"
             >
               <Code className="w-6 h-6" />
             </Button>
           </TooltipTrigger>
-          <TooltipContent side="left" className="bg-gray-900 text-white border-gray-700">
+          <TooltipContent side="left" className="bg-custom-text text-custom-bg border-custom-border">
             <p>Ver configuración CSS</p>
           </TooltipContent>
         </Tooltip>
@@ -133,12 +133,12 @@ const ThemeCustomizer: React.FC = () => {
           <TooltipTrigger asChild>
             <Button
               onClick={() => setIsOpen(true)}
-              className="bg-indigo-600 text-white shadow-lg hover:bg-indigo-700 rounded-full w-14 h-14 p-0"
+              className="bg-custom-primary text-custom-bg shadow-lg hover:opacity-90 rounded-full w-14 h-14 p-0"
             >
               <Settings className="w-6 h-6" />
             </Button>
           </TooltipTrigger>
-          <TooltipContent side="left" className="bg-gray-900 text-white border-gray-700">
+          <TooltipContent side="left" className="bg-custom-text text-custom-bg border-custom-border">
             <p>Personalizar colores de la página</p>
           </TooltipContent>
         </Tooltip>
@@ -147,11 +147,11 @@ const ThemeCustomizer: React.FC = () => {
       {/* CSS Config Panel */}
       {isCssOpen && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm">
-          <div className="fixed right-0 top-0 h-full w-full sm:w-96 bg-white border-l border-gray-200 shadow-2xl overflow-y-auto">
+          <div className="fixed right-0 top-0 h-full w-full sm:w-96 bg-custom-bg border-l border-custom-border shadow-2xl overflow-y-auto">
             <Card className="h-full rounded-none border-0">
-              <CardHeader className="border-b border-gray-200 bg-white sticky top-0 z-10">
+              <CardHeader className="border-b border-custom-border bg-custom-bg sticky top-0 z-10">
                 <div className="flex items-center justify-between">
-                  <CardTitle className="text-gray-800 flex items-center gap-2 text-lg md:text-xl">
+                  <CardTitle className="text-custom-text flex items-center gap-2 text-lg md:text-xl">
                     <Code className="w-5 h-5" />
                     Configuración CSS
                   </CardTitle>
@@ -159,20 +159,20 @@ const ThemeCustomizer: React.FC = () => {
                     variant="ghost"
                     size="sm"
                     onClick={() => setIsCssOpen(false)}
-                    className="text-gray-600 hover:bg-gray-100"
+                    className="text-custom-text/70 hover:bg-custom-border/30"
                   >
                     <X className="w-4 h-4" />
                   </Button>
                 </div>
               </CardHeader>
               
-              <CardContent className="p-4 md:p-6 space-y-6 bg-white">
+              <CardContent className="p-4 md:p-6 space-y-6 bg-custom-bg">
                 <div>
-                  <Label className="text-sm font-semibold text-gray-800 mb-3 block">
+                  <Label className="text-sm font-semibold text-custom-text mb-3 block">
                     Variables CSS Actuales
                   </Label>
-                  <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 font-mono text-sm overflow-x-auto">
-                    <pre className="whitespace-pre-wrap text-gray-800">
+                  <div className="bg-custom-border/20 border border-custom-border rounded-lg p-4 font-mono text-sm overflow-x-auto">
+                    <pre className="whitespace-pre-wrap text-custom-text">
                       {generateCSSConfig()}
                     </pre>
                   </div>
@@ -181,7 +181,7 @@ const ThemeCustomizer: React.FC = () => {
                 <div className="space-y-3">
                   <Button
                     onClick={copyToClipboard}
-                    className="w-full bg-emerald-600 text-white hover:bg-emerald-700"
+                    className="w-full bg-custom-accent text-custom-bg hover:opacity-90"
                   >
                     {copied ? (
                       <>
@@ -199,7 +199,7 @@ const ThemeCustomizer: React.FC = () => {
                   <Button
                     onClick={copyShareableLink}
                     variant="outline"
-                    className="w-full border-indigo-300 text-indigo-700 hover:bg-indigo-50"
+                    className="w-full border-custom-primary text-custom-primary hover:bg-custom-primary/10"
                   >
                     {linkCopied ? (
                       <>
@@ -215,9 +215,9 @@ const ThemeCustomizer: React.FC = () => {
                   </Button>
                 </div>
 
-                <div className="text-xs text-gray-500 bg-gray-50 p-3 rounded-lg">
+                <div className="text-xs text-custom-text/60 bg-custom-border/20 p-3 rounded-lg">
                   <p className="font-medium mb-1">Link actual:</p>
-                  <p className="break-all text-gray-600">{generateShareableUrl()}</p>
+                  <p className="break-all text-custom-text/70">{generateShareableUrl()}</p>
                 </div>
               </CardContent>
             </Card>
@@ -228,11 +228,11 @@ const ThemeCustomizer: React.FC = () => {
       {/* Customizer Panel */}
       {isOpen && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm">
-          <div className="fixed right-0 top-0 h-full w-full sm:w-96 bg-white border-l border-gray-200 shadow-2xl overflow-y-auto">
+          <div className="fixed right-0 top-0 h-full w-full sm:w-96 bg-custom-bg border-l border-custom-border shadow-2xl overflow-y-auto">
             <Card className="h-full rounded-none border-0">
-              <CardHeader className="border-b border-gray-200 bg-white sticky top-0 z-10">
+              <CardHeader className="border-b border-custom-border bg-custom-bg sticky top-0 z-10">
                 <div className="flex items-center justify-between">
-                  <CardTitle className="text-gray-800 flex items-center gap-2 text-lg md:text-xl">
+                  <CardTitle className="text-custom-text flex items-center gap-2 text-lg md:text-xl">
                     <Palette className="w-5 h-5" />
                     Personalizar Colores
                   </CardTitle>
@@ -240,17 +240,17 @@ const ThemeCustomizer: React.FC = () => {
                     variant="ghost"
                     size="sm"
                     onClick={() => setIsOpen(false)}
-                    className="text-gray-600 hover:bg-gray-100"
+                    className="text-custom-text/70 hover:bg-custom-border/30"
                   >
                     <X className="w-4 h-4" />
                   </Button>
                 </div>
               </CardHeader>
               
-              <CardContent className="p-4 md:p-6 space-y-6 bg-white">
+              <CardContent className="p-4 md:p-6 space-y-6 bg-custom-bg">
                 {/* Preset Themes */}
                 <div>
-                  <Label className="text-sm font-semibold text-gray-800 mb-3 block">
+                  <Label className="text-sm font-semibold text-custom-text mb-3 block">
                     Temas Predefinidos
                   </Label>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -260,7 +260,7 @@ const ThemeCustomizer: React.FC = () => {
                         variant="outline"
                         size="sm"
                         onClick={() => updateTheme(preset.config)}
-                        className="text-xs h-auto p-2 border-gray-300 text-gray-700 hover:bg-gray-50 text-center"
+                        className="text-xs h-auto p-2 border-custom-border text-custom-text/80 hover:bg-custom-border/20 text-center"
                       >
                         {preset.name}
                       </Button>
@@ -270,7 +270,7 @@ const ThemeCustomizer: React.FC = () => {
 
                 {/* Color Controls */}
                 <div className="space-y-4">
-                  <Label className="text-sm font-semibold text-gray-800">
+                  <Label className="text-sm font-semibold text-custom-text">
                     Colores Personalizados
                   </Label>
                   
@@ -283,7 +283,7 @@ const ThemeCustomizer: React.FC = () => {
                     { key: 'backgroundColor', label: 'Color de Fondo' }
                   ].map(({ key, label }) => (
                     <div key={key} className="space-y-2">
-                      <Label className="text-xs text-gray-600">
+                      <Label className="text-xs text-custom-text/70">
                         {label}
                       </Label>
                       <div className="flex items-center space-x-2">
@@ -291,13 +291,13 @@ const ThemeCustomizer: React.FC = () => {
                           type="color"
                           value={theme[key as keyof ThemeConfig] as string}
                           onChange={(e) => handleColorChange(key as keyof ThemeConfig, e.target.value)}
-                          className="w-10 md:w-12 h-8 rounded border border-gray-300 cursor-pointer flex-shrink-0"
+                          className="w-10 md:w-12 h-8 rounded border border-custom-border cursor-pointer flex-shrink-0"
                         />
                         <input
                           type="text"
                           value={theme[key as keyof ThemeConfig] as string}
                           onChange={(e) => handleColorChange(key as keyof ThemeConfig, e.target.value)}
-                          className="flex-1 px-3 py-1 text-sm border border-gray-300 rounded bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 min-w-0"
+                          className="flex-1 px-3 py-1 text-sm border border-custom-border rounded bg-custom-bg text-custom-text focus:outline-none focus:ring-2 focus:ring-custom-primary/50 min-w-0"
                         />
                       </div>
                     </div>
@@ -306,17 +306,17 @@ const ThemeCustomizer: React.FC = () => {
 
                 {/* Font Family */}
                 <div className="space-y-2">
-                  <Label className="text-sm font-semibold text-gray-800">
+                  <Label className="text-sm font-semibold text-custom-text">
                     Tipografía
                   </Label>
                   <Select
                     value={theme.fontFamily}
                     onValueChange={(value) => updateTheme({ fontFamily: value })}
                   >
-                    <SelectTrigger className="border-gray-300 bg-white text-gray-800">
+                    <SelectTrigger className="border-custom-border bg-custom-bg text-custom-text">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent className="bg-white border-gray-300">
+                    <SelectContent className="bg-custom-bg border-custom-border">
                       <SelectItem value="Inter">Inter (Sans-serif)</SelectItem>
                       <SelectItem value="Playfair Display">Playfair Display (Serif)</SelectItem>
                       <SelectItem value="Roboto">Roboto (Sans-serif)</SelectItem>
@@ -329,7 +329,7 @@ const ThemeCustomizer: React.FC = () => {
                 <Button
                   onClick={resetTheme}
                   variant="outline"
-                  className="w-full border-gray-300 text-gray-700 hover:bg-gray-50"
+                  className="w-full border-custom-border text-custom-text/80 hover:bg-custom-border/20"
                 >
                   <RotateCcw className="w-4 h-4 mr-2" />
                   Restablecer Tema

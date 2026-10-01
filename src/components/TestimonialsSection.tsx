@@ -95,7 +95,7 @@ const TestimonialsSection: React.FC = () => {
 
                 {/* Author */}
                 <div className="flex items-center space-x-3">
-                  <div className="w-10 md:w-12 h-10 md:h-12 rounded-full bg-gradient-to-r from-custom-primary to-custom-secondary flex items-center justify-center text-white text-lg md:text-xl">
+                  <div className="w-10 md:w-12 h-10 md:h-12 rounded-full bg-gradient-to-r from-custom-primary to-custom-secondary flex items-center justify-center text-custom-gradient-contrast text-lg md:text-xl">
                     {testimonial.avatar}
                   </div>
                   <div>
@@ -118,10 +118,10 @@ const TestimonialsSection: React.FC = () => {
             ¿Listo para unirte a miles de profesionales satisfechos?
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4">
-            <button className="bg-custom-primary text-white px-6 md:px-8 py-3 rounded-lg font-semibold hover:opacity-90 transition-opacity w-full sm:w-auto">
+            <button className="bg-custom-primary text-custom-primary-contrast px-6 md:px-8 py-3 rounded-lg font-semibold hover:opacity-90 transition-opacity w-full sm:w-auto">
               Comenzar Gratis
             </button>
-            <button className="border border-custom-primary text-custom-primary px-6 md:px-8 py-3 rounded-lg font-semibold hover:bg-custom-primary hover:text-white transition-colors w-full sm:w-auto">
+            <button className="border border-custom-primary text-custom-primary px-6 md:px-8 py-3 rounded-lg font-semibold hover:bg-custom-primary hover:text-custom-primary-contrast transition-colors w-full sm:w-auto">
               Ver Precios
             </button>
           </div>

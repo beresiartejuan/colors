@@ -130,7 +130,7 @@ const BlogSection: React.FC = () => {
               placeholder="Tu email aquí..."
               className="w-full px-4 py-3 rounded-lg border border-custom-border bg-custom-bg text-custom-text placeholder-custom-text/50 focus:outline-none focus:ring-2 focus:ring-custom-primary/50"
             />
-            <Button className="bg-custom-primary text-white px-6 md:px-8 py-3 font-semibold hover:opacity-90 whitespace-nowrap w-full sm:w-auto">
+            <Button className="bg-custom-primary text-custom-primary-contrast px-6 md:px-8 py-3 font-semibold hover:opacity-90 whitespace-nowrap w-full sm:w-auto">
               Suscribirse
             </Button>
           </div>

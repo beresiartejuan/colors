@@ -61,7 +61,7 @@ const FeaturesSection: React.FC = () => {
             >
               <CardHeader className="pb-4">
                 <div className="w-12 h-12 rounded-lg bg-gradient-to-r from-custom-primary to-custom-secondary flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                  <feature.icon className="w-6 h-6 text-white" />
+                  <feature.icon className="w-6 h-6 text-custom-gradient-contrast" />
                 </div>
                 <CardTitle className="text-lg md:text-xl font-semibold text-custom-text group-hover:text-custom-primary transition-colors">
                   {feature.title}

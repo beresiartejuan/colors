@@ -40,7 +40,7 @@ const HeroSection: React.FC = () => {
           <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-6 mb-8 md:mb-12 animate-fade-in px-4">
             <Button 
               size="lg" 
-              className="bg-custom-primary text-white hover:opacity-90 px-6 md:px-8 py-3 md:py-4 text-base md:text-lg font-semibold shadow-lg hover:shadow-xl transition-all w-full sm:w-auto"
+              className="bg-custom-primary text-custom-primary-contrast hover:opacity-90 px-6 md:px-8 py-3 md:py-4 text-base md:text-lg font-semibold shadow-lg hover:shadow-xl transition-all w-full sm:w-auto"
             >
               Comenzar Ahora
               <ArrowRight className="ml-2 w-4 md:w-5 h-4 md:h-5" />
@@ -48,7 +48,7 @@ const HeroSection: React.FC = () => {
             <Button 
               variant="outline" 
               size="lg"
-              className="border-custom-text/20 text-custom-text hover:bg-custom-text hover:text-custom-bg px-6 md:px-8 py-3 md:py-4 text-base md:text-lg font-semibold w-full sm:w-auto"
+              className="border-custom-text/20 text-custom-text hover:bg-custom-text hover:text-custom-text-contrast px-6 md:px-8 py-3 md:py-4 text-base md:text-lg font-semibold w-full sm:w-auto"
             >
               <Play className="mr-2 w-4 md:w-5 h-4 md:h-5" />
               Ver Demo
