@@ -7,8 +7,9 @@ Demo interactiva de **temas dinámicos**: personaliza colores y tipografía en v
 - Vite + React + TypeScript (plugin SWC)
 - Tailwind CSS v4 (plugin de Vite, configuración CSS-first)
 - shadcn/ui
+- wouter (ruteo)
+- zustand (estado del tema)
 - TanStack Query
-- react-router-dom
 
 ## Getting started
 
@@ -25,10 +26,16 @@ pnpm dev
 Otros scripts:
 
 ```sh
-pnpm build    # build de producción en dist/
-pnpm preview  # servir el build localmente
-pnpm lint     # eslint
+pnpm build       # build de producción en dist/
+pnpm preview     # servir el build localmente
+pnpm lint        # eslint
+pnpm typecheck   # tsc -b --force
 ```
+
+## CI
+
+GitHub Actions (`.github/workflows/ci.yml`) corre en cada push/PR a `main`:
+instala con pnpm (caché incluido) y valida **typecheck + lint + build**.
 
 ## Cómo funciona el sistema de temas
 
@@ -44,7 +51,7 @@ updateTheme() (hook useThemeCustomization)
   → el navegador re-pinta sin recargar (transiciones de 300ms en index.css)
 ```
 
-- **Estado**: `src/hooks/useThemeCustomization.ts`
+- **Estado**: zustand store en `src/hooks/useThemeCustomization.ts` (`useThemeStore`)
 - **Variables CSS**: `:root` en `src/index.css`
 - **Panel de personalización**: `src/components/ThemeCustomizer.tsx`
 - **Ruta compartible**: `/:colors` en `App.tsx`, formato `/<primary>-<secondary>-<accent>-<text>-<bg>-<border>`

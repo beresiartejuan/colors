@@ -33,7 +33,7 @@ Todo es **CSS en runtime**: no hay rebuild, ni recarga, ni inyección de hojas d
 
 ### 1. Fuente de estado: `src/hooks/useThemeCustomization.ts`
 
-Es el corazón del mecanismo. Define:
+Es el corazón del mecanismo: combina un **store de zustand** con wouter para leer la ruta. Define:
 
 - **`ThemeConfig`** — el modelo del tema: 6 colores + tipografía.
   ```ts
@@ -48,16 +48,11 @@ Es el corazón del mecanismo. Define:
   }
   ```
 - **`defaultTheme`** — valores iniciales (los mismos que hardcodea `:root` en `index.css`; ambos deben mantenerse sincronizados).
-- **Estado React** `useState<ThemeConfig>(defaultTheme)`.
-
-API pública del hook:
-
-| Función | Qué hace |
-|---|---|
-| `updateTheme(partial)` | Merge superficial sobre el tema actual (`{ ...prev, ...newTheme }`). Así el preset de colores no pisa `fontFamily`. |
-| `resetTheme()` | Vuelve a `defaultTheme` **y** hace `navigate('/')` (limpia la URL con colores). |
-| `generateShareableUrl()` | Serializa el tema a una URL (ver sección de URL). |
-| `theme` | El objeto de configuración vigente. |
+- **`useThemeStore`** — store de **zustand** que persiste el `ThemeConfig` fuera del ciclo de montaje de componentes. Expone:
+  - `theme` — el objeto de configuración vigente.
+  - `updateTheme(partial)` — merge superficial (`{ ...prev, ...newTheme }`); asi el preset de colores no pisa `fontFamily`.
+  - `resetTheme()` — vuelve a `defaultTheme` **y** navega a `/` con wouter (limpia la URL con colores).
+- **`useThemeCustomization()`** — el hook que consumen los componentes: conecta el store con wouter (`useLocation`) y sincroniza el tema con el DOM.
 
 #### El truco clave: hex → "tripleta RGB" en crudo
 
@@ -196,15 +191,17 @@ Ejemplo: /0ea5e9-06b6d4-22d3ee-0c4a6e-f0f9ff-e0f2fe
 
 ### Ruteo
 
-En `App.tsx`:
+En `App.tsx` (con **wouter**):
 
 ```tsx
-<Route path="/" element={<Index />} />
-<Route path="/:colors" element={<ColorPalette />} />
-<Route path="*" element={<NotFound />} />
+<Switch>
+  <Route path="/" component={Index} />
+  <Route path="/:colors" component={ColorPalette} />
+  <Route component={NotFound} />
+</Switch>
 ```
 
-`vercel.json` reescribe todo a `index.html` (SPA), así que un link compartido no da 404 al abrirlo directo.
+`vercel.json` reescribe todo a `index.html` (SPA), así que un link compartido no da 404 al abrirlo directo:
 
 ```json
 { "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }] }
@@ -219,13 +216,15 @@ const colorPattern =
   /^\/([a-fA-F0-9]{6})-([a-fA-F0-9]{6})-([a-fA-F0-9]{6})-([a-fA-F0-9]{6})-([a-fA-F0-9]{6})-([a-fA-F0-9]{6})$/;
 ```
 
-Y un `useEffect` reactivo al `location.pathname` re-aplica el tema cada vez que la URL contiene una paleta (esto permite incluso cambiar de tema navegando entre URLs de paletas):
+Y un `useEffect` reactivo a la ubicación de wouter re-aplica el tema cada vez que la URL contiene una paleta (esto permite incluso cambiar de tema navegando entre URLs de paletas):
 
 ```ts
+const [location] = useLocation();
+
 useEffect(() => {
-  const colorsFromPath = parseColorsFromPath(location.pathname);
-  if (colorsFromPath) setTheme(prev => ({ ...prev, ...colorsFromPath }));
-}, [location.pathname]);
+  const colorsFromPath = parseColorsFromPath(location);
+  if (colorsFromPath) updateTheme(colorsFromPath);
+}, [location, updateTheme]);
 ```
 
 ---
@@ -242,10 +241,10 @@ Panel flotante (botones abajo a la derecha) que expone el hook a personas usuari
    - `generateCSSConfig()` imprime un snippet `:root { --color-primary: ...; }` **copiable al portapapeles** para reutilizar el tema fuera de esta app.
    - `copyShareableLink()` copia la URL con el tema serializado en el path.
 
-> Nota: cada invocación de `useThemeCustomization()` crea su propio estado (no es contexto global). En la práctica funciona porque `ThemeCustomizer` y las páginas montan el hook en el mismo árbol y el segundo `useEffect` escribe en `document.documentElement`, que es global por naturaleza. Si se quiere reutilizar en más lugares o sincronizar instancias, el paso natural es envolverlo en un Context/Provider.
+> Nota: el estado vive en un store de **zustand** (`useThemeStore`), por lo que es global: cualquier componente que monte `useThemeCustomization()` comparte el mismo tema, sin necesidad de Provider ni Context.
 
 ---
 
 ## Resumen en una frase
 
-**El mecanismo = estado React de un `ThemeConfig` → hex serializados como tripletas RGB crudas → `style.setProperty` sobre `<html>` → variables `--custom-*` consumidas por utilidades Tailwind `rgb(var(--custom-*))`, con el mismo tema serializable en la ruta `/<6hex>-...-<6hex>` para compartirlo.**
+**El mecanismo = store zustand con un `ThemeConfig` → hex serializados como tripletas RGB crudas → `style.setProperty` sobre `<html>` → variables `--custom-*` consumidas por utilidades Tailwind `rgb(var(--custom-*))`, con el mismo tema serializable en la ruta `/<6hex>-...-<6hex>` (wouter) para compartirlo.**
