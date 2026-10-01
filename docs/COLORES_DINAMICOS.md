@@ -10,7 +10,7 @@ Este documento describe **cómo funciona** el sistema de temas dinámicos de est
 Usuario cambia color (panel ThemeCustomizer)
         │
         ▼
-setState en useThemeCustomization()  ──►  genera URL compartible (hex en el path)
+updateTheme() en useThemeCustomization() / zustand store  ──►  URL compartible (hex en path)
         │
         ▼
 useEffect escribe variables CSS en <html>
@@ -23,6 +23,10 @@ Tailwind v4 consume esas variables (bloque @theme inline de index.css)
         ▼
 Las utilidades Tailwind se pintan en vivo
         bg-custom-primary, text-custom-text, from-custom-primary, .../50
+        │
+        ▼
+Persistencia en localStorage (zustand persist)
+        keys: colors-theme-v1
 ```
 
 Todo es **CSS en runtime**: no hay rebuild, ni recarga, ni inyección de hojas de estilo nuevas. Se reescriben variables CSS sobre `document.documentElement` y el navegador re-pinta instantáneamente (con transiciones de 300 ms definidas en `index.css`).
@@ -48,11 +52,19 @@ Es el corazón del mecanismo: combina un **store de zustand** con wouter para le
   }
   ```
 - **`defaultTheme`** — valores iniciales (los mismos que hardcodea `:root` en `index.css`; ambos deben mantenerse sincronizados).
-- **`useThemeStore`** — store de **zustand** que persiste el `ThemeConfig` fuera del ciclo de montaje de componentes. Expone:
+- **`useThemeStore`** — store de **zustand** envuelto con `persist` (`zustand/middleware`). La clave en `localStorage` es `colors-theme-v1` y solo se persiste el objeto `theme`. Expone:
   - `theme` — el objeto de configuración vigente.
   - `updateTheme(partial)` — merge superficial (`{ ...prev, ...newTheme }`); asi el preset de colores no pisa `fontFamily`.
-  - `resetTheme()` — vuelve a `defaultTheme` **y** navega a `/` con wouter (limpia la URL con colores).
+  - `resetTheme()` — vuelve a `defaultTheme`, navega a `/` con wouter y limpia el almacenamiento persistido.
 - **`useThemeCustomization()`** — el hook que consumen los componentes: conecta el store con wouter (`useLocation`) y sincroniza el tema con el DOM.
+
+#### Orden de prioridad del tema
+
+Cuando la app arranca, el tema se resuelve así:
+
+1. **URL `/:colors`** — si coincide el patrón de 6 hex, gana y reemplaza lo que haya en storage.
+2. **Storage local (`colors-theme-v1`)** — si existe, se rehidrata automáticamente.
+3. **`defaultTheme`** — fallback inicial.
 
 #### El truco clave: hex → "tripleta RGB" en crudo
 
@@ -153,13 +165,13 @@ Resultado: cada cambio de variable se refleja en TODAS las utilidades `custom-*`
 
 ### 4. Consumo en la UI (convenios de uso)
 
-Los componentes de página (`Index.tsx`, `ColorPalette.tsx`) fijan el lienzo base:
+Cada plantilla fija el lienzo base con el tema activo:
 
 ```tsx
 <div className="min-h-screen bg-custom-bg text-custom-text font-custom">
 ```
 
-Y el resto de secciones combina las utilidades siguiendo estos patrones (ver `HeroSection`, `Header`, `FeaturesSection`, `TestimonialsSection`, `BlogSection`, `Footer`):
+Las plantillas actuales son `DemoTemplate`, `SaasDashboardTemplate` y `PortfolioTemplate`, registradas en `src/templates/index.ts`. El resto de secciones combina las utilidades siguiendo estos patrones (ver `Header`, `Footer`, `HeroSection`, etc.):
 
 | Patrón | Ejemplo real |
 |---|---|
@@ -167,8 +179,9 @@ Y el resto de secciones combina las utilidades siguiendo estos patrones (ver `He
 | Opacidad sobre el color (posible gracias a la tripleta RGB) | `text-custom-text/70`, `bg-custom-primary/10`, `from-custom-primary/5` |
 | Gradientes de marca | `bg-gradient-to-r from-custom-primary to-custom-secondary` |
 | Bordes temáticos | `border-custom-border`, `hover:border-custom-primary/50` |
-| Tipografía | `font-custom` (o `style={{ fontFamily: 'var(--custom-font-family)' }}`) |
-| Texto sobre color | `bg-custom-primary text-white` (se asume blanco fijo como foreground) |
+| Tipografía | `font-custom` |
+| Texto sobre color sólido | `bg-custom-primary text-custom-primary-contrast` |
+| Texto sobre gradiente | `bg-gradient-to-br from-custom-primary to-custom-secondary text-custom-gradient-contrast` |
 
 ---
 
@@ -195,13 +208,16 @@ En `App.tsx` (con **wouter**):
 
 ```tsx
 <Switch>
-  <Route path="/" component={Index} />
-  <Route path="/:colors" component={ColorPalette} />
+  <Route path="/" component={Landing} />
+  <Route path="/templates" component={TemplatesGallery} />
+  <Route path="/templates/:templateId" component={TemplateShowcase} />
+  {/* Backwards compatibility: old shareable links */}
+  <Route path="/:colors" component={LegacyTemplateRedirect} />
   <Route component={NotFound} />
 </Switch>
 ```
 
-`vercel.json` reescribe todo a `index.html` (SPA), así que un link compartido no da 404 al abrirlo directo:
+`vercel.json` reescribe todo a `index.html` (SPA), así que los links compartidos (`/:colors`) y las rutas de plantillas no dan 404 al abrirse directo:
 
 ```json
 { "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }] }
@@ -247,4 +263,4 @@ Panel flotante (botones abajo a la derecha) que expone el hook a personas usuari
 
 ## Resumen en una frase
 
-**El mecanismo = store zustand con un `ThemeConfig` → hex serializados como tripletas RGB crudas → `style.setProperty` sobre `<html>` → variables `--custom-*` consumidas por utilidades Tailwind `rgb(var(--custom-*))`, con el mismo tema serializable en la ruta `/<6hex>-...-<6hex>` (wouter) para compartirlo.**
+**El mecanismo = store zustand con `persist` en `localStorage` para un `ThemeConfig` → hex serializados como tripletas RGB crudas → `style.setProperty` sobre `<html>` → variables `--custom-*` consumidas por utilidades Tailwind `rgb(var(--custom-*))`, con el tema aplicado a 3 plantillas (`/templates/:id`) y serializable en la ruta `/<6hex>-...-<6hex>` (wouter) para compartirlo.**

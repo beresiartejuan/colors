@@ -1,6 +1,6 @@
 # Colors
 
-Demo interactiva de **temas dinámicos**: personaliza colores y tipografía en vivo y comparte tu tema mediante una URL con la paleta serializada en el path.
+Visualizador interactivo de **paletas de colores en plantillas reales**: crea tu paleta en la landing, elige entre 3 plantillas (landing, dashboard SaaS y portfolio creativo), personaliza colores y tipografía en vivo, y comparte tu tema mediante una URL con la paleta serializada en el path.
 
 ## Stack
 
@@ -39,22 +39,28 @@ instala con pnpm (caché incluido) y valida **typecheck + lint + build**.
 
 ## Cómo funciona el sistema de temas
 
-Un usuario abre el panel flotante (esquina inferior derecha), elige colores y fuente, y la interfaz se re-pinta al instante. El tema completo puede copiarse como URL o como snippet CSS.
+El usuario crea su paleta en la landing, navega a la galería de plantillas y ve cómo los colores y la tipografía se aplican al instante en 3 diseños distintos. El tema se persiste en `localStorage`, se puede compartir como URL y exportar como snippet CSS.
 
 El mecanismo está documentado en detalle en [`docs/COLORES_DINAMICOS.md`](docs/COLORES_DINAMICOS.md). Resumen del flujo:
 
 ```
-updateTheme() (hook useThemeCustomization)
+updateTheme() (hook useThemeCustomization / zustand store)
   → hexToRgb() serializa cada color a canales RGB crudos ("99 102 241")
   → useEffect escribe --custom-* en document.documentElement
   → Tailwind consume rgb(var(--custom-*)) vía utilidades custom-*
   → el navegador re-pinta sin recargar (transiciones de 300ms en index.css)
 ```
 
-- **Estado**: zustand store en `src/hooks/useThemeCustomization.ts` (`useThemeStore`)
+- **Estado**: zustand store con `persist` en `src/hooks/useThemeCustomization.ts`
+- **Persistencia**: `localStorage` (`colors-theme-v1`)
 - **Variables CSS**: `:root` en `src/index.css`
 - **Panel de personalización**: `src/components/ThemeCustomizer.tsx`
-- **Ruta compartible**: `/:colors` en `App.tsx`, formato `/<primary>-<secondary>-<accent>-<text>-<bg>-<border>`
+- **Plantillas**: `src/templates/` (DemoTemplate, SaasDashboardTemplate, PortfolioTemplate)
+- **Rutas**:
+  - `/` — landing para crear la paleta
+  - `/templates` — galería de plantillas
+  - `/templates/:id` — plantilla en vivo con personalizador
+  - `/:colors` — link compartible legacy, formato `/<primary>-<secondary>-<accent>-<text>-<bg>-<border>`
 
 ## Deploy
 
