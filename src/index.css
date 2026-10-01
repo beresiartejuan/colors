@@ -54,6 +54,14 @@
   --custom-text: 15 23 42;
   --custom-bg: 255 255 255;
   --custom-font-family: 'Inter', sans-serif;
+
+  /* Contrast defaults until the hook computes them from the active theme */
+  --custom-primary-contrast: 255 255 255;
+  --custom-secondary-contrast: 255 255 255;
+  --custom-accent-contrast: 0 0 0;
+  --custom-text-contrast: 255 255 255;
+  --custom-bg-contrast: 0 0 0;
+  --custom-gradient-contrast: 255 255 255;
 }
 
 .dark {
@@ -97,6 +105,13 @@
   --custom-bg: 15 23 42;
   --custom-text: 255 255 255;
   --custom-border: 71 85 105;
+
+  --custom-primary-contrast: 255 255 255;
+  --custom-secondary-contrast: 255 255 255;
+  --custom-accent-contrast: 0 0 0;
+  --custom-text-contrast: 0 0 0;
+  --custom-bg-contrast: 255 255 255;
+  --custom-gradient-contrast: 255 255 255;
 }
 
 @theme inline {
@@ -140,6 +155,14 @@
   --color-custom-border: rgb(var(--custom-border));
   --color-custom-text: rgb(var(--custom-text));
   --color-custom-bg: rgb(var(--custom-bg));
+
+  /* Contrast colors for text on top of custom colors */
+  --color-custom-primary-contrast: rgb(var(--custom-primary-contrast));
+  --color-custom-secondary-contrast: rgb(var(--custom-secondary-contrast));
+  --color-custom-accent-contrast: rgb(var(--custom-accent-contrast));
+  --color-custom-text-contrast: rgb(var(--custom-text-contrast));
+  --color-custom-bg-contrast: rgb(var(--custom-bg-contrast));
+  --color-custom-gradient-contrast: rgb(var(--custom-gradient-contrast));
 
   --font-custom: var(--custom-font-family);
 
