@@ -1,121 +1,98 @@
-# 🎨 Colors
+# Colors
 
 [![CI](https://github.com/beresiartejuan/colors/actions/workflows/ci.yml/badge.svg)](https://github.com/beresiartejuan/colors/actions/workflows/ci.yml)
+[![Demo](https://img.shields.io/badge/demo-colors.beresiarte.xyz-0ea5e9)](https://colors.beresiarte.xyz)
 [![pnpm](https://img.shields.io/badge/pnpm-10-f69220?logo=pnpm)](https://pnpm.io)
-[![Stack](https://img.shields.io/badge/Vite%20+%20React%2019%20+%20Tailwind%20v4-646CFF?logo=vite)](https://vitejs.dev)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-Visualizador interactivo de **paletas de colores en plantillas reales** 🖌️. Crea tu paleta en la landing, elige entre 3 plantillas, personaliza colores y tipografía en vivo, y comparte tu tema mediante una URL con la paleta serializada en el path.
+Visualizador interactivo de **paletas de color sobre plantillas reales**. Creás una paleta en la landing, elegís entre 3 plantillas, personalizás colores y tipografía en vivo, y compartís el tema con una URL.
 
-## 🖼️ Demo
+**Demo:** [colors.beresiarte.xyz](https://colors.beresiarte.xyz)
 
-Aún no hay un deploy público. Puedes levantar la app localmente con `pnpm dev` y abrir [`http://localhost:8080`](http://localhost:8080).
+## Features
 
-> 🖼️ *Captura de la landing* — por añadir cuando el proyecto tenga deploy real.
+- Editor de paleta en la landing
+- 3 plantillas: landing genérica, dashboard SaaS y portfolio creativo
+- Personalización en vivo de colores y tipografía
+- Links compartibles con la paleta en la URL
+- Persistencia del tema en `localStorage`
+- Exportación de la paleta como snippet CSS
+- SPA con wouter + tema basado en variables CSS y Tailwind v4
 
-## ✨ Features
+## Stack
 
-- 🎨 **Editor de paleta interactivo** en la landing.
-- 🧩 **3 plantillas reales**: landing genérica, dashboard SaaS y portfolio creativo.
-- ⚡ **Personalización en vivo** de colores y tipografía.
-- 🔗 **Links compartibles** con la paleta serializada en la URL.
-- 💾 **Persistencia del tema** en `localStorage`.
-- 📤 **Exportación** de la paleta como snippet CSS.
-- 🧭 **Ruteo SPA** con wouter.
-- 🌙 **Sistema de tema** basado en variables CSS y Tailwind v4.
+- [Vite](https://vitejs.dev) + [React 19](https://react.dev) + [TypeScript](https://www.typescriptlang.org)
+- [Tailwind CSS v4](https://tailwindcss.com) + [shadcn/ui](https://ui.shadcn.com)
+- [wouter](https://github.com/molefrog/wouter) · [zustand](https://zustand-demo.pmnd.rs) · [TanStack Query](https://tanstack.com/query/latest)
+- Deploy en [Vercel](https://vercel.com) (`vercel.json` para SPA)
 
-## 🛠️ Stack
-
-- [Vite](https://vitejs.dev) + [React 19](https://react.dev) + [TypeScript](https://www.typescriptlang.org) (plugin SWC)
-- [Tailwind CSS v4](https://tailwindcss.com) (plugin de Vite, configuración CSS-first)
-- [shadcn/ui](https://ui.shadcn.com)
-- [wouter](https://github.com/molefrog/wouter) (ruteo)
-- [zustand](https://zustand-demo.pmnd.rs) (estado del tema, con `persist`)
-- [TanStack Query](https://tanstack.com/query/latest)
-
-## 🚀 Quick start
+## Quick start
 
 Requisitos: **Node.js 20+** y **pnpm 10**.
 
 ```sh
-# 1. Instalar dependencias
 pnpm install
-
-# 2. Levantar el servidor de desarrollo (puerto 8080)
 pnpm dev
 ```
 
-Abre [`http://localhost:8080`](http://localhost:8080) en tu navegador.
-
-## 📦 Scripts
+Abrí [http://localhost:8080](http://localhost:8080).
 
 | Script | Descripción |
 |--------|-------------|
-| `pnpm dev` | Servidor de desarrollo en el puerto 8080 |
+| `pnpm dev` | Servidor de desarrollo (puerto 8080) |
 | `pnpm build` | Build de producción en `dist/` |
-| `pnpm build:dev` | Build en modo development |
 | `pnpm preview` | Servir el build localmente |
-| `pnpm lint` | Ejecuta ESLint |
-| `pnpm typecheck` | Ejecuta `tsc -b --force` |
+| `pnpm lint` | ESLint |
+| `pnpm typecheck` | `tsc -b --force` |
 
-## 🗂️ Project structure
+## Estructura
 
 ```
 .
-├── .github/workflows/ci.yml   # CI con GitHub Actions
-├── docs/
-│   └── COLORES_DINAMICOS.md   # Documentación técnica del sistema de temas
-├── public/                    # Assets estáticos
+├── .github/workflows/ci.yml
+├── docs/COLORES_DINAMICOS.md   # sistema de temas
 ├── src/
-│   ├── components/            # Componentes reutilizables (ThemeCustomizer, Header, Footer...)
-│   ├── hooks/                 # Hooks de estado (useThemeCustomization)
-│   ├── templates/             # DemoTemplate, SaasDashboardTemplate, PortfolioTemplate
-│   ├── pages/                 # Vistas de la SPA (Landing, TemplatesGallery, TemplateShowcase)
-│   ├── lib/                   # Utilidades
-│   ├── index.css              # Variables CSS y transiciones del tema
-│   └── main.tsx               # Punto de entrada
-├── vercel.json                # Reescritura de rutas para SPA
-├── package.json
-├── tsconfig.json
-└── vite.config.ts
+│   ├── components/             # ThemeCustomizer, Header, secciones…
+│   ├── hooks/                  # useThemeCustomization
+│   ├── templates/              # Demo, SaaS dashboard, Portfolio
+│   ├── pages/                  # Landing, galería, showcase
+│   ├── index.css               # variables CSS del tema
+│   └── main.tsx
+├── vercel.json
+└── package.json
 ```
 
-## 🌈 Theme system
+## Sistema de temas
 
-El usuario crea su paleta en la landing, navega a la galería de plantillas y ve cómo los colores y la tipografía se aplican al instante en 3 diseños distintos. El tema se persiste en `localStorage`, se puede compartir como URL y exportar como snippet CSS.
+El usuario arma la paleta, entra a la galería y ve colores/tipografía aplicados al instante. El tema se guarda en `localStorage`, se comparte por URL y se exporta a CSS.
 
-El mecanismo está documentado en detalle en [`docs/COLORES_DINAMICOS.md`](docs/COLORES_DINAMICOS.md). Resumen del flujo:
+Detalle técnico: [`docs/COLORES_DINAMICOS.md`](docs/COLORES_DINAMICOS.md).
 
 ```
-updateTheme() (hook useThemeCustomization / zustand store)
-  → hexToRgb() serializa cada color a canales RGB crudos ("99 102 241")
-  → useEffect escribe --custom-* en document.documentElement
-  → Tailwind consume rgb(var(--custom-*)) vía utilidades custom-*
-  → el navegador re-pinta sin recargar (transiciones de 300ms en index.css)
+updateTheme() (zustand + persist)
+  → hexToRgb() → canales RGB ("99 102 241")
+  → --custom-* en document.documentElement
+  → Tailwind: rgb(var(--custom-*))
+  → re-paint sin reload (transiciones ~300ms)
 ```
 
-- **Estado**: zustand store con `persist` en `src/hooks/useThemeCustomization.ts`
-- **Persistencia**: `localStorage` (`colors-theme-v1`)
-- **Variables CSS**: `:root` en `src/index.css`
-- **Panel de personalización**: `src/components/ThemeCustomizer.tsx`
-- **Plantillas**: `src/templates/` (DemoTemplate, SaasDashboardTemplate, PortfolioTemplate)
+- Estado: `src/hooks/useThemeCustomization.ts`
+- Panel: `src/components/ThemeCustomizer.tsx`
+- Plantillas: `src/templates/`
 
-## 🧭 Routes
+## Rutas
 
 | Ruta | Descripción |
 |------|-------------|
 | `/` | Landing para crear la paleta |
 | `/templates` | Galería de plantillas |
 | `/templates/:templateId` | Plantilla en vivo con personalizador |
-| `/:colors` | Link compartible legacy, formato `/<primary>-<secondary>-<accent>-<text>-<bg>-<border>` |
+| `/:colors` | Link compartible legacy: `/<primary>-<secondary>-<accent>-<text>-<bg>-<border>` |
 
-## 🔄 CI
+## CI
 
-GitHub Actions (`.github/workflows/ci.yml`) corre en cada push/PR a `main`: instala con pnpm (caché incluido) y valida **typecheck + lint + build**.
+GitHub Actions en push/PR a `main`: pnpm install (con caché) + **typecheck + lint + build**.
 
-## 🚀 Deploy notes
-
-Proyecto SPA configurado para Vercel (`vercel.json` reescribe todas las rutas a `index.html`), necesario para que los links de paletas compartidas resuelvan directo. Actualmente no hay una URL de producción publicada.
-
-## 📄 License
+## License
 
 [MIT](LICENSE)
