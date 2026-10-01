@@ -1,6 +1,6 @@
 import { Palette, Mail, Phone, MapPin, Github, Twitter, Linkedin, Instagram } from 'lucide-react';
 
-const Footer: React.FC = () => {
+const Footer = () => {
   return (
     <footer id="contacto" className="bg-custom-text text-custom-text-contrast py-12 md:py-16">
       <div className="container mx-auto px-4">

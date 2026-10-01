@@ -1,4 +1,4 @@
-import { Link, useLocation } from 'wouter';
+import { Link } from 'wouter';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -11,8 +11,6 @@ import { templates } from '@/templates';
 import { ArrowRight, Palette, Layers } from 'lucide-react';
 
 const TemplatesGallery = () => {
-  const [, navigate] = useLocation();
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-custom-bg to-custom-primary/5 text-custom-text font-custom py-12 md:py-20 px-4">
       <div className="container mx-auto max-w-6xl">
@@ -43,11 +41,13 @@ const TemplatesGallery = () => {
               </CardHeader>
               <CardContent>
                 <Button
+                  asChild
                   className="w-full bg-custom-primary hover:opacity-90 text-custom-primary-contrast"
-                  onClick={() => navigate(`/templates/${template.id}`)}
                 >
-                  Ver en vivo
-                  <ArrowRight className="ml-2 w-4 h-4" />
+                  <Link href={`/templates/${template.id}`}>
+                    Ver en vivo
+                    <ArrowRight className="ml-2 w-4 h-4" />
+                  </Link>
                 </Button>
               </CardContent>
             </Card>
