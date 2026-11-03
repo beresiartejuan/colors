@@ -12,6 +12,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useThemeCustomization, ThemeConfig } from '@/hooks/useThemeCustomization';
+import SiteNav from '@/components/SiteNav';
 import { ArrowRight, Copy, Check, Palette, Sparkles } from 'lucide-react';
 
 const colorFields: { key: keyof ThemeConfig; label: string }[] = [
@@ -49,20 +50,22 @@ const Landing: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-custom-bg text-custom-text font-custom transition-colors duration-300">
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-1/2 -right-1/2 w-[800px] h-[800px] rounded-full bg-custom-primary/10 blur-3xl" />
-        <div className="absolute -bottom-1/2 -left-1/2 w-[800px] h-[800px] rounded-full bg-custom-secondary/10 blur-3xl" />
+    <div className="min-h-screen bg-custom-bg text-custom-text font-custom relative overflow-hidden">
+      <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+        <div className="absolute inset-0 bg-dot-grid" />
+        <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[900px] h-[500px] rounded-full bg-custom-primary/15 blur-3xl" />
+        <div className="absolute top-1/2 -right-40 w-[500px] h-[500px] rounded-full bg-custom-secondary/10 blur-3xl" />
       </div>
+      <SiteNav />
 
-      <main className="relative container mx-auto px-4 py-12 md:py-20">
-        <div className="max-w-5xl mx-auto">
+      <main className="relative container mx-auto px-4 py-12 md:py-16">
+        <div className="max-w-6xl mx-auto">
           <div className="text-center mb-10 md:mb-14">
-            <div className="inline-flex items-center gap-2 bg-custom-primary/10 text-custom-primary px-4 py-2 rounded-full mb-6 animate-fade-in">
+            <div className="inline-flex items-center gap-2 border border-custom-primary/20 bg-custom-primary/10 text-custom-primary px-3.5 py-1.5 rounded-full mb-6 animate-fade-in">
               <Sparkles className="w-4 h-4" />
               <span className="text-sm font-medium">Vista previa en tiempo real</span>
             </div>
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 leading-tight">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 leading-[1.1] tracking-tight text-balance">
               Crea tu paleta y mírala en{' '}
               <span className="bg-gradient-to-r from-custom-primary to-custom-secondary bg-clip-text text-transparent">
                 3 plantillas
@@ -75,7 +78,8 @@ const Landing: React.FC = () => {
             </p>
           </div>
 
-          <Card className="bg-custom-bg/80 backdrop-blur border-custom-border shadow-xl">
+          <div className="grid lg:grid-cols-[1fr_340px] gap-6 items-start">
+          <Card className="bg-custom-bg/80 backdrop-blur border-custom-border shadow-xl shadow-custom-primary/5">
             <CardHeader className="pb-4">
               <CardTitle className="flex items-center gap-2 text-2xl">
                 <Palette className="w-6 h-6 text-custom-primary" />
@@ -110,7 +114,7 @@ const Landing: React.FC = () => {
                 ))}
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5 items-end">
+              <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_auto] gap-5 items-end">
                 <div className="space-y-2">
                   <Label className="text-sm font-medium">Tipografía</Label>
                   <Select
@@ -130,10 +134,10 @@ const Landing: React.FC = () => {
                   </Select>
                 </div>
 
-                <div className="flex flex-col sm:flex-row gap-3">
+                <div className="flex flex-col sm:flex-row gap-3 min-w-0">
                   <Button
                     size="lg"
-                    className="flex-1 bg-custom-primary text-custom-primary-contrast hover:opacity-90"
+                    className="sm:flex-1 whitespace-nowrap bg-custom-primary text-custom-primary-contrast hover:opacity-90"
                     onClick={goToTemplates}
                   >
                     Ver en 3 plantillas
@@ -142,7 +146,7 @@ const Landing: React.FC = () => {
                   <Button
                     size="lg"
                     variant="outline"
-                    className="flex-1 border-custom-primary text-custom-primary hover:bg-custom-primary hover:text-custom-primary-contrast"
+                    className="sm:flex-1 whitespace-nowrap border-custom-primary text-custom-primary hover:bg-custom-primary hover:text-custom-primary-contrast"
                     onClick={copyLink}
                   >
                     {copied ? (
@@ -161,6 +165,42 @@ const Landing: React.FC = () => {
               </div>
             </CardContent>
           </Card>
+
+          <aside className="lg:sticky lg:top-20 space-y-4" aria-label="Vista previa">
+            <div
+              className="rounded-xl border border-custom-border bg-custom-bg shadow-xl shadow-custom-primary/5 overflow-hidden"
+              style={{ fontFamily: 'var(--custom-font-family)' }}
+            >
+              <div className="flex items-center gap-1.5 px-4 py-2.5 border-b border-custom-border">
+                <span className="w-2.5 h-2.5 rounded-full bg-custom-text/15" />
+                <span className="w-2.5 h-2.5 rounded-full bg-custom-text/15" />
+                <span className="w-2.5 h-2.5 rounded-full bg-custom-text/15" />
+                <span className="ml-2 text-xs text-custom-text/50">Vista previa</span>
+              </div>
+              <div className="p-5 space-y-4">
+                <div className="h-24 rounded-lg bg-gradient-to-br from-custom-primary to-custom-secondary p-4 flex flex-col justify-end">
+                  <p className="text-custom-gradient-contrast font-semibold leading-tight">Tu marca, tus colores</p>
+                  <p className="text-custom-gradient-contrast/80 text-xs">Así se verá tu interfaz</p>
+                </div>
+                <div className="flex gap-2">
+                  <span className="px-3 py-1.5 rounded-md text-xs font-medium bg-custom-primary text-custom-primary-contrast">Primario</span>
+                  <span className="px-3 py-1.5 rounded-md text-xs font-medium bg-custom-secondary text-custom-secondary-contrast">Secundario</span>
+                  <span className="px-3 py-1.5 rounded-md text-xs font-medium bg-custom-accent text-custom-accent-contrast">Acento</span>
+                </div>
+                <div className="rounded-lg border border-custom-border p-3 space-y-2">
+                  <div className="h-2 w-2/3 rounded bg-custom-text/80" />
+                  <div className="h-2 w-full rounded bg-custom-text/20" />
+                  <div className="h-2 w-5/6 rounded bg-custom-text/20" />
+                </div>
+              </div>
+            </div>
+            <div className="flex h-3 rounded-full overflow-hidden border border-custom-border" aria-hidden="true">
+              {colorFields.map(({ key }) => (
+                <span key={key} className="flex-1" style={{ backgroundColor: theme[key] as string }} />
+              ))}
+            </div>
+          </aside>
+          </div>
 
           <div className="mt-10 text-center">
             <p className="text-sm text-custom-text/60">

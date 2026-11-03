@@ -208,7 +208,7 @@ const PortfolioTemplate = () => {
       {/* Footer */}
       <footer className="border-t border-custom-border py-10">
         <div className="container mx-auto flex flex-col items-center justify-between gap-4 px-4 md:flex-row">
-          <span className="text-sm text-custom-text/60">© 2024 Alex Morgan. Hecho con pasión.</span>
+          <span className="text-sm text-custom-text/60">© {new Date().getFullYear()} Alex Morgan. Hecho con pasión.</span>
           <div className="flex items-center gap-4">
             {socials.map((social) => (
               <Button

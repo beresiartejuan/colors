@@ -112,13 +112,13 @@ const ThemeCustomizer: React.FC = () => {
   return (
     <TooltipProvider>
       {/* Floating Buttons Container */}
-      <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-3">
+      <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 flex flex-col gap-3">
         {/* CSS Config Button */}
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
               onClick={() => setIsCssOpen(true)}
-              className="bg-custom-accent text-custom-bg shadow-lg hover:opacity-90 rounded-full w-14 h-14 p-0"
+              className="bg-custom-accent text-custom-bg shadow-lg hover:opacity-90 rounded-full w-12 h-12 sm:w-14 sm:h-14 p-0"
             >
               <Code className="w-6 h-6" />
             </Button>
@@ -133,7 +133,7 @@ const ThemeCustomizer: React.FC = () => {
           <TooltipTrigger asChild>
             <Button
               onClick={() => setIsOpen(true)}
-              className="bg-custom-primary text-custom-bg shadow-lg hover:opacity-90 rounded-full w-14 h-14 p-0"
+              className="bg-custom-primary text-custom-bg shadow-lg hover:opacity-90 rounded-full w-12 h-12 sm:w-14 sm:h-14 p-0"
             >
               <Settings className="w-6 h-6" />
             </Button>

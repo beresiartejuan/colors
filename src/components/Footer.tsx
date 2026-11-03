@@ -91,7 +91,7 @@ const Footer = () => {
         {/* Bottom section */}
         <div className="border-t border-custom-text-contrast/10 mt-8 md:mt-12 pt-6 md:pt-8 flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
           <p className="text-custom-text-contrast/60 text-sm text-center md:text-left">
-            © 2024 Colors. Todos los derechos reservados.
+            © {new Date().getFullYear()} Colors. Todos los derechos reservados.
           </p>
           <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-6 text-sm text-custom-text-contrast/60">
             <a href="#" className="hover:text-custom-text-contrast transition-colors">Política de Privacidad</a>

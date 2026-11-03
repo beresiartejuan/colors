@@ -82,7 +82,7 @@ const SaasDashboardTemplate = () => {
             <span className="text-lg font-bold text-custom-text">SaasDash</span>
           </div>
 
-          <nav className="hidden items-center gap-1 md:flex">
+          <nav className="hidden items-center gap-1 lg:flex">
             {navItems.map((item) => (
               <Button key={item.label} variant="ghost" className="text-custom-text/80 hover:bg-custom-primary/10 hover:text-custom-primary">
                 <item.icon className="mr-2 h-4 w-4" />
@@ -98,7 +98,7 @@ const SaasDashboardTemplate = () => {
             <Avatar className="border border-custom-border">
               <AvatarFallback className="bg-custom-primary text-custom-primary-contrast">JD</AvatarFallback>
             </Avatar>
-            <Button variant="ghost" size="icon" className="md:hidden text-custom-text">
+            <Button variant="ghost" size="icon" className="lg:hidden text-custom-text">
               <Menu className="h-5 w-5" />
             </Button>
           </div>
@@ -259,7 +259,7 @@ const SaasDashboardTemplate = () => {
       {/* Footer */}
       <footer className="mt-12 border-t border-custom-border py-6">
         <div className="container mx-auto flex flex-col items-center justify-between gap-3 px-4 text-sm text-custom-text/60 sm:flex-row">
-          <span>© 2024 SaasDash. Todos los derechos reservados.</span>
+          <span>© {new Date().getFullYear()} SaasDash. Todos los derechos reservados.</span>
           <div className="flex items-center gap-4">
             <span className="hover:text-custom-primary cursor-pointer">Privacy</span>
             <span className="hover:text-custom-primary cursor-pointer">Terms</span>

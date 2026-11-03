@@ -17,7 +17,7 @@ const HeroSection: React.FC = () => {
           <div className="inline-flex items-center space-x-2 bg-custom-primary/10 px-3 md:px-4 py-2 rounded-full mb-6 md:mb-8 animate-fade-in">
             <Star className="w-4 h-4 text-custom-primary fill-current" />
             <span className="text-sm font-medium text-custom-primary">
-              #1 en Personalización de Colores
+              Personalización de colores en vivo
             </span>
           </div>
 
@@ -58,10 +58,10 @@ const HeroSection: React.FC = () => {
           {/* Social proof */}
           <div className="flex flex-col items-center space-y-4 animate-fade-in px-4">
             <p className="text-custom-text/60 text-sm text-center">
-              Confiado por más de 10,000 diseñadores y desarrolladores
+              Construido con tecnologías modernas
             </p>
             <div className="flex flex-wrap items-center justify-center gap-4 md:gap-8 opacity-60">
-              {['Google', 'Microsoft', 'Apple', 'Adobe', 'Figma'].map((company) => (
+              {['React', 'TypeScript', 'Tailwind', 'Vite', 'Radix UI'].map((company) => (
                 <div 
                   key={company}
                   className="px-3 md:px-4 py-2 bg-custom-border/30 rounded-lg text-custom-text/70 text-xs md:text-sm font-medium"

@@ -200,7 +200,40 @@
   }
 }
 
-/* Smooth transitions for dynamic theme changes */
-* {
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+/* Smooth transitions for dynamic theme changes (only on interactive/surface elements) */
+a, button, input, select, textarea, [class*="bg-"], [class*="border-"] {
+  transition-property: background-color, color, border-color, box-shadow, opacity, transform;
+  transition-duration: 0.25s;
+  transition-timing-function: ease;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background-color: rgb(var(--custom-primary) / 0.25);
+}
+
+:focus-visible {
+  outline: 2px solid rgb(var(--custom-primary));
+  outline-offset: 2px;
+}
+
+/* Subtle dot grid used as page backdrop */
+.bg-dot-grid {
+  background-image: radial-gradient(rgb(var(--custom-text) / 0.12) 1px, transparent 1px);
+  background-size: 24px 24px;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, #000 40%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, #000 40%, transparent 100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

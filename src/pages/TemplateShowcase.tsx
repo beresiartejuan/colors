@@ -22,11 +22,13 @@ const TemplateShowcase = () => {
 
   return (
     <div className="relative font-custom">
-      <TemplateComponent />
+      <div className="pb-20">
+        <TemplateComponent />
+      </div>
 
       <ThemeCustomizer />
 
-      <div className="fixed bottom-6 left-6 z-50 flex flex-wrap items-center gap-2">
+      <div className="fixed bottom-4 left-4 sm:bottom-6 sm:left-6 z-50 flex flex-wrap items-center gap-2">
         <Button
           variant="outline"
           size="icon"
