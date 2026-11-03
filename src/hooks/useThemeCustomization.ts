@@ -1,7 +1,16 @@
-import { useEffect } from 'react';
 import { useLocation } from 'wouter';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import {
+  COLOR_ORDER,
+  buildShareUrl,
+  normalizeHex,
+  parseColorsFromPath,
+  templateIdFromPath,
+  type SharedTheme,
+} from '@/lib/shareLink';
+
+export { parseColorsFromPath };
 
 export interface ThemeConfig {
   primaryColor: string;
@@ -93,57 +102,83 @@ const averageRgb = (hexA: string, hexB: string): string => {
   )}`;
 };
 
-export const parseColorsFromPath = (pathname: string): Partial<ThemeConfig> | null => {
-  const colorPattern =
-    /^\/([a-fA-F0-9]{6})-([a-fA-F0-9]{6})-([a-fA-F0-9]{6})-([a-fA-F0-9]{6})-([a-fA-F0-9]{6})-([a-fA-F0-9]{6})$/;
-  const match = pathname.match(colorPattern);
-
-  if (match) {
-    return {
-      primaryColor: `#${match[1]}`,
-      secondaryColor: `#${match[2]}`,
-      accentColor: `#${match[3]}`,
-      textColor: `#${match[4]}`,
-      backgroundColor: `#${match[5]}`,
-      borderColor: `#${match[6]}`,
-    };
+/** Drops invalid values so a bad hex or unknown font can never reach the store. */
+export const sanitizeTheme = (theme: Partial<ThemeConfig> | SharedTheme, base: ThemeConfig = defaultTheme): ThemeConfig => {
+  const next: ThemeConfig = { ...base };
+  for (const key of COLOR_ORDER) {
+    const value = theme[key];
+    const hex = typeof value === 'string' ? normalizeHex(value) : null;
+    if (hex) next[key] = hex;
   }
-
-  return null;
+  if (theme.fontFamily && theme.fontFamily in fontMap) next.fontFamily = theme.fontFamily;
+  return next;
 };
 
-const generateShareableUrl = (themeConfig: ThemeConfig): string => {
-  const baseUrl = window.location.origin;
-  const colors = [
-    themeConfig.primaryColor.replace('#', ''),
-    themeConfig.secondaryColor.replace('#', ''),
-    themeConfig.accentColor.replace('#', ''),
-    themeConfig.textColor.replace('#', ''),
-    themeConfig.backgroundColor.replace('#', ''),
-    themeConfig.borderColor.replace('#', ''),
-  ].join('-');
+const sameTheme = (a: ThemeConfig, b: ThemeConfig) =>
+  (Object.keys(a) as (keyof ThemeConfig)[]).every((k) => a[k] === b[k]);
 
-  return `${baseUrl}/${colors}`;
+export const applyThemeToDom = (theme: ThemeConfig) => {
+  const root = document.documentElement;
+
+  root.style.setProperty('--custom-primary', hexToRgb(theme.primaryColor));
+  root.style.setProperty('--custom-secondary', hexToRgb(theme.secondaryColor));
+  root.style.setProperty('--custom-accent', hexToRgb(theme.accentColor));
+  root.style.setProperty('--custom-border', hexToRgb(theme.borderColor));
+  root.style.setProperty('--custom-text', hexToRgb(theme.textColor));
+  root.style.setProperty('--custom-bg', hexToRgb(theme.backgroundColor));
+
+  root.style.setProperty('--custom-primary-contrast', getContrastRgb(theme.primaryColor));
+  root.style.setProperty('--custom-secondary-contrast', getContrastRgb(theme.secondaryColor));
+  root.style.setProperty('--custom-accent-contrast', getContrastRgb(theme.accentColor));
+  root.style.setProperty('--custom-text-contrast', getContrastRgb(theme.textColor));
+  root.style.setProperty('--custom-bg-contrast', getContrastRgb(theme.backgroundColor));
+
+  root.style.setProperty(
+    '--custom-gradient-contrast',
+    getContrastRgb(averageRgb(theme.primaryColor, theme.secondaryColor))
+  );
+
+  root.style.setProperty('--custom-font-family', fontMap[theme.fontFamily] || fontMap['Inter']);
 };
 
 interface ThemeState {
   theme: ThemeConfig;
+  /** The visitor's own theme while a shared one is being previewed (not persisted as `theme`). */
+  sharedBackup: ThemeConfig | null;
   updateTheme: (newTheme: Partial<ThemeConfig>) => void;
   resetTheme: () => void;
+  applySharedTheme: (shared: SharedTheme) => void;
+  keepSharedTheme: () => void;
+  restoreOwnTheme: () => void;
 }
 
 export const useThemeStore = create<ThemeState>()(
   persist(
     (set) => ({
       theme: defaultTheme,
+      sharedBackup: null,
       updateTheme: (newTheme) =>
-        set((state) => ({ theme: { ...state.theme, ...newTheme } })),
+        set((state) => ({ theme: sanitizeTheme(newTheme, state.theme) })),
       // Pure state reset; navigation is handled by the hook (wouter)
-      resetTheme: () => set({ theme: defaultTheme }),
+      resetTheme: () => set({ theme: defaultTheme, sharedBackup: null }),
+      applySharedTheme: (shared) =>
+        set((state) => {
+          const incoming = sanitizeTheme(shared, state.theme);
+          if (sameTheme(incoming, state.theme)) return state;
+          return { theme: incoming, sharedBackup: state.sharedBackup ?? state.theme };
+        }),
+      keepSharedTheme: () => set({ sharedBackup: null }),
+      restoreOwnTheme: () =>
+        set((state) => (state.sharedBackup ? { theme: state.sharedBackup, sharedBackup: null } : state)),
     }),
     {
       name: 'colors-theme-v1',
-      partialize: (state) => ({ theme: state.theme }),
+      // While previewing a shared theme, keep persisting the visitor's own one.
+      partialize: (state) => ({ theme: state.sharedBackup ?? state.theme }),
+      merge: (persisted, current) => ({
+        ...current,
+        theme: sanitizeTheme((persisted as { theme?: Partial<ThemeConfig> } | undefined)?.theme ?? {}),
+      }),
     }
   )
 );
@@ -155,41 +190,6 @@ export const useThemeCustomization = () => {
 
   const [location, navigate] = useLocation();
 
-  // Load theme from URL on mount / path change
-  useEffect(() => {
-    const colorsFromPath = parseColorsFromPath(location);
-    if (colorsFromPath) {
-      updateTheme(colorsFromPath);
-    }
-  }, [location, updateTheme]);
-
-  useEffect(() => {
-    const root = document.documentElement;
-
-    root.style.setProperty('--custom-primary', hexToRgb(theme.primaryColor));
-    root.style.setProperty('--custom-secondary', hexToRgb(theme.secondaryColor));
-    root.style.setProperty('--custom-accent', hexToRgb(theme.accentColor));
-    root.style.setProperty('--custom-border', hexToRgb(theme.borderColor));
-    root.style.setProperty('--custom-text', hexToRgb(theme.textColor));
-    root.style.setProperty('--custom-bg', hexToRgb(theme.backgroundColor));
-
-    root.style.setProperty('--custom-primary-contrast', getContrastRgb(theme.primaryColor));
-    root.style.setProperty('--custom-secondary-contrast', getContrastRgb(theme.secondaryColor));
-    root.style.setProperty('--custom-accent-contrast', getContrastRgb(theme.accentColor));
-    root.style.setProperty('--custom-text-contrast', getContrastRgb(theme.textColor));
-    root.style.setProperty('--custom-bg-contrast', getContrastRgb(theme.backgroundColor));
-
-    root.style.setProperty(
-      '--custom-gradient-contrast',
-      getContrastRgb(averageRgb(theme.primaryColor, theme.secondaryColor))
-    );
-
-    root.style.setProperty(
-      '--custom-font-family',
-      fontMap[theme.fontFamily] || fontMap['Inter']
-    );
-  }, [theme]);
-
   return {
     theme,
     updateTheme,
@@ -198,6 +198,6 @@ export const useThemeCustomization = () => {
       navigate('/');
       useThemeStore.persist.clearStorage();
     },
-    generateShareableUrl: () => generateShareableUrl(theme),
+    generateShareableUrl: () => buildShareUrl(theme, templateIdFromPath(location)),
   };
 };

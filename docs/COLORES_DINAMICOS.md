@@ -10,7 +10,7 @@ Este documento describe **cómo funciona** el sistema de temas dinámicos de est
 Usuario cambia color (panel ThemeCustomizer)
         │
         ▼
-updateTheme() en useThemeCustomization() / zustand store  ──►  URL compartible (hex en path)
+updateTheme() en useThemeCustomization() / zustand store  ──►  URL compartible (?c=hex…&f=fuente)
         │
         ▼
 useEffect escribe variables CSS en <html>
@@ -62,7 +62,7 @@ Es el corazón del mecanismo: combina un **store de zustand** con wouter para le
 
 Cuando la app arranca, el tema se resuelve así:
 
-1. **URL `/:colors`** — si coincide el patrón de 6 hex, gana y reemplaza lo que haya en storage.
+1. **URL `?c=…&f=…`** (o legacy `/:colors`) — se muestra como vista previa; el tema propio queda respaldado hasta que la persona elija guardarlo o volver.
 2. **Storage local (`colors-theme-v1`)** — si existe, se rehidrata automáticamente.
 3. **`defaultTheme`** — fallback inicial.
 
@@ -187,60 +187,53 @@ Las plantillas actuales son `DemoTemplate`, `SaasDashboardTemplate` y `Portfolio
 
 ## Temas compartibles por URL
 
-Esta es la segunda mitad del mecanismo: un tema completo viaja **en la propia ruta**, sin query params ni storage.
+Un tema completo (colores + tipografía + plantilla) viaja en la URL como query string. La lógica vive en `src/lib/shareLink.ts`.
 
-### Serialización → URL
-
-`generateShareableUrl()` toma los 6 hex, quita el `#`, une con guiones y devuelve:
+### Formato
 
 ```
-https://<origin>/<primary>-<secondary>-<accent>-<text>-<background>-<border>
+/templates/<id>?c=<primary>-<secondary>-<accent>-<text>-<background>-<border>&f=<fuente>
 
-Ejemplo: /0ea5e9-06b6d4-22d3ee-0c4a6e-f0f9ff-e0f2fe
-         (Ocean Blue preset: primary-secondary-accent-text-bg-border)
+Ejemplo: /templates/saas?c=0ea5e9-06b6d4-22d3ee-0c4a6e-f0f9ff-e0f2fe&f=playfair
 ```
 
-⚠️ El **orden es fijo**: `primary`, `secondary`, `accent`, `text`, `background`, `border`. `fontFamily` no viaja en la URL.
+- `c`: 6 hex de 6 dígitos, en minúsculas, **orden fijo** (`primary`, `secondary`, `accent`, `text`, `background`, `border`).
+- `f`: `inter` · `playfair` · `roboto` · `opensans`. Si falta o es desconocida, se conserva la fuente actual.
+- La ruta indica la plantilla: el link abre la misma plantilla desde la que se copió (o `/templates` si se copia desde la landing).
+- **Legacy**: `/<6 hex separados por guiones>` sigue funcionando y redirige a `/templates/demo?c=…`.
+
+### Generación
+
+`useThemeCustomization().generateShareableUrl()` llama a `buildShareUrl(theme, templateId)`. Se copia con `shareLink()`: hoja nativa de compartir en dispositivos táctiles y portapapeles (con fallback a `execCommand`) en el resto. Los componentes muestran un toast de éxito o error.
+
+### Lectura y vista previa
+
+`ThemeSync` (montado una vez en `App.tsx`) hace dos cosas:
+
+1. Escribe el tema activo en las variables CSS (así toda ruta, incluida la 404, queda tematizada).
+2. Si la URL trae `?c=…`, llama a `applySharedTheme()`. Esto **no pisa** el tema guardado de la persona: se conserva en `sharedBackup`, y `partialize` persiste ese respaldo mientras dure la vista previa.
+
+`SharedThemeBanner` ofrece **Guardar como mía** (`keepSharedTheme`) o **Volver a la mía** (`restoreOwnTheme`) y limpia el query string.
+
+### Validación
+
+- `normalizeHex()` acepta `#abc`, `abc`, `#AABBCC` y devuelve `#aabbcc`; lo inválido devuelve `null`.
+- `sanitizeTheme()` filtra cualquier valor inválido antes de entrar al store (también al rehidratar desde `localStorage`).
+- `ColorField` mantiene el texto como borrador: se puede escribir a medias, solo los valores válidos llegan al tema y el input se marca en rojo si no lo es.
 
 ### Ruteo
 
-En `App.tsx` (con **wouter**):
+`vercel.json` reescribe todo a `index.html` (SPA), así que cualquier link abre directo sin 404.
 
 ```tsx
 <Switch>
   <Route path="/" component={Landing} />
   <Route path="/templates" component={TemplatesGallery} />
   <Route path="/templates/:templateId" component={TemplateShowcase} />
-  {/* Backwards compatibility: old shareable links */}
+  {/* Legacy shareable links → /templates/demo?c=… */}
   <Route path="/:colors" component={LegacyTemplateRedirect} />
   <Route component={NotFound} />
 </Switch>
-```
-
-`vercel.json` reescribe todo a `index.html` (SPA), así que los links compartidos (`/:colors`) y las rutas de plantillas no dan 404 al abrirse directo:
-
-```json
-{ "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }] }
-```
-
-### Deserialización
-
-`parseColorsFromPath()` valida con regex **exclusivamente 6 bloques de 6 hex**; si el path no calza, se ignora y sigue el tema actual/por defecto:
-
-```ts
-const colorPattern =
-  /^\/([a-fA-F0-9]{6})-([a-fA-F0-9]{6})-([a-fA-F0-9]{6})-([a-fA-F0-9]{6})-([a-fA-F0-9]{6})-([a-fA-F0-9]{6})$/;
-```
-
-Y un `useEffect` reactivo a la ubicación de wouter re-aplica el tema cada vez que la URL contiene una paleta (esto permite incluso cambiar de tema navegando entre URLs de paletas):
-
-```ts
-const [location] = useLocation();
-
-useEffect(() => {
-  const colorsFromPath = parseColorsFromPath(location);
-  if (colorsFromPath) updateTheme(colorsFromPath);
-}, [location, updateTheme]);
 ```
 
 ---

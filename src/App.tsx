@@ -8,6 +8,8 @@ import TemplatesGallery from "./pages/TemplatesGallery";
 import TemplateShowcase from "./pages/TemplateShowcase";
 import LegacyTemplateRedirect from "./pages/LegacyTemplateRedirect";
 import NotFound from "./pages/NotFound";
+import ThemeSync from "@/components/ThemeSync";
+import SharedThemeBanner from "@/components/SharedThemeBanner";
 
 const queryClient = new QueryClient();
 
@@ -16,6 +18,8 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
+      <ThemeSync />
+      <SharedThemeBanner />
       <Switch>
         <Route path="/" component={Landing} />
         <Route path="/templates" component={TemplatesGallery} />

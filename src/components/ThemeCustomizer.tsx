@@ -8,6 +8,9 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { Palette, RotateCcw, Settings, X, Code, Copy, Check, Share } from 'lucide-react';
 import { useThemeCustomization, ThemeConfig } from '@/hooks/useThemeCustomization';
 import { useFirstVisitTour } from '@/hooks/useFirstVisitTour';
+import ColorField from '@/components/ColorField';
+import { copyText, shareLink } from '@/lib/shareLink';
+import { toast } from 'sonner';
 
 const ThemeCustomizer: React.FC = () => {
   const { theme, updateTheme, resetTheme, generateShareableUrl } = useThemeCustomization();
@@ -45,23 +48,22 @@ const ThemeCustomizer: React.FC = () => {
   };
 
   const copyToClipboard = async () => {
-    try {
-      await navigator.clipboard.writeText(generateCSSConfig());
+    if (await copyText(generateCSSConfig())) {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      console.error('Error copying to clipboard:', err);
+    } else {
+      toast.error('No se pudo copiar el CSS. Cópialo manualmente desde el panel.');
     }
   };
 
   const copyShareableLink = async () => {
-    try {
-      const shareableUrl = generateShareableUrl();
-      await navigator.clipboard.writeText(shareableUrl);
+    const result = await shareLink(generateShareableUrl());
+    if (result === 'copied' || result === 'shared') {
       setLinkCopied(true);
       setTimeout(() => setLinkCopied(false), 2000);
-    } catch (err) {
-      console.error('Error copying link to clipboard:', err);
+      toast.success(result === 'copied' ? 'Link copiado al portapapeles' : 'Link compartido');
+    } else if (result === 'failed') {
+      toast.error('No se pudo copiar el link. Selecciónalo desde el recuadro "Link actual".');
     }
   };
 
@@ -293,20 +295,11 @@ const ThemeCustomizer: React.FC = () => {
                       <Label className="text-xs text-custom-text/70">
                         {label}
                       </Label>
-                      <div className="flex items-center space-x-2">
-                        <input
-                          type="color"
-                          value={theme[key as keyof ThemeConfig] as string}
-                          onChange={(e) => handleColorChange(key as keyof ThemeConfig, e.target.value)}
-                          className="w-10 md:w-12 h-8 rounded border border-custom-border cursor-pointer flex-shrink-0"
-                        />
-                        <input
-                          type="text"
-                          value={theme[key as keyof ThemeConfig] as string}
-                          onChange={(e) => handleColorChange(key as keyof ThemeConfig, e.target.value)}
-                          className="flex-1 px-3 py-1 text-sm border border-custom-border rounded bg-custom-bg text-custom-text focus:outline-none focus:ring-2 focus:ring-custom-primary/50 min-w-0"
-                        />
-                      </div>
+                      <ColorField
+                        label={label}
+                        value={theme[key as keyof ThemeConfig] as string}
+                        onChange={(hex) => handleColorChange(key as keyof ThemeConfig, hex)}
+                      />
                     </div>
                   ))}
                 </div>

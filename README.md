@@ -87,7 +87,8 @@ updateTheme() (zustand + persist)
 | `/` | Landing para crear la paleta |
 | `/templates` | Galería de plantillas |
 | `/templates/:templateId` | Plantilla en vivo con personalizador |
-| `/:colors` | Link compartible legacy: `/<primary>-<secondary>-<accent>-<text>-<bg>-<border>` |
+| `/templates/:id?c=…&f=…` | Link compartible: 6 colores (`c`) y tipografía (`f`) |
+| `/:colors` | Link legacy `/<primary>-…-<border>`; redirige a `/templates/demo?c=…` |
 
 ## CI
 

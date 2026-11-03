@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useLocation, Link } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
   Select,
@@ -13,6 +12,9 @@ import {
 } from '@/components/ui/select';
 import { useThemeCustomization, ThemeConfig } from '@/hooks/useThemeCustomization';
 import SiteNav from '@/components/SiteNav';
+import ColorField from '@/components/ColorField';
+import { shareLink } from '@/lib/shareLink';
+import { toast } from 'sonner';
 import { ArrowRight, Copy, Check, Palette, Sparkles } from 'lucide-react';
 
 const colorFields: { key: keyof ThemeConfig; label: string }[] = [
@@ -36,12 +38,13 @@ const Landing: React.FC = () => {
   };
 
   const copyLink = async () => {
-    try {
-      await navigator.clipboard.writeText(generateShareableUrl());
+    const result = await shareLink(generateShareableUrl());
+    if (result === 'copied' || result === 'shared') {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      console.error('Error copying link:', err);
+      toast.success(result === 'copied' ? 'Link copiado al portapapeles' : 'Link compartido');
+    } else if (result === 'failed') {
+      toast.error('No se pudo copiar el link. Inténtalo de nuevo.');
     }
   };
 
@@ -94,22 +97,13 @@ const Landing: React.FC = () => {
                 {colorFields.map(({ key, label }) => (
                   <div key={key} className="space-y-2">
                     <Label className="text-sm font-medium">{label}</Label>
-                    <div className="flex items-center gap-2">
-                      <input
-                        type="color"
-                        aria-label={`Selector de color ${label.toLowerCase()}`}
-                        value={theme[key] as string}
-                        onChange={(e) => handleColorChange(key, e.target.value)}
-                        className="h-10 w-12 rounded-md border border-custom-border cursor-pointer flex-shrink-0"
-                      />
-                      <Input
-                        type="text"
-                        aria-label={`Código hexadecimal ${label.toLowerCase()}`}
-                        value={theme[key] as string}
-                        onChange={(e) => handleColorChange(key, e.target.value)}
-                        className="flex-1 border-custom-border bg-custom-bg"
-                      />
-                    </div>
+                    <ColorField
+                      label={label}
+                      value={theme[key] as string}
+                      onChange={(hex) => handleColorChange(key, hex)}
+                      swatchClassName="h-10 w-12"
+                      inputClassName="h-10 text-base"
+                    />
                   </div>
                 ))}
               </div>
