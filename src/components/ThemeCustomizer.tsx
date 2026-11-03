@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Palette, RotateCcw, Settings, X, Code, Copy, Check, Share } from 'lucide-react';
 import { useThemeCustomization, ThemeConfig } from '@/hooks/useThemeCustomization';
+import { useFirstVisitTour } from '@/hooks/useFirstVisitTour';
 
 const ThemeCustomizer: React.FC = () => {
   const { theme, updateTheme, resetTheme, generateShareableUrl } = useThemeCustomization();
@@ -14,6 +15,8 @@ const ThemeCustomizer: React.FC = () => {
   const [isCssOpen, setIsCssOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   const [linkCopied, setLinkCopied] = useState(false);
+
+  useFirstVisitTour();
 
   const handleColorChange = (key: keyof ThemeConfig, value: string) => {
     updateTheme({ [key]: value });
@@ -117,6 +120,8 @@ const ThemeCustomizer: React.FC = () => {
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
+              id="tour-css-button"
+              aria-label="Ver configuración CSS"
               onClick={() => setIsCssOpen(true)}
               className="bg-custom-accent text-custom-bg shadow-lg hover:opacity-90 rounded-full w-12 h-12 sm:w-14 sm:h-14 p-0"
             >
@@ -132,6 +137,8 @@ const ThemeCustomizer: React.FC = () => {
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
+              id="tour-theme-button"
+              aria-label="Personalizar colores de la página"
               onClick={() => setIsOpen(true)}
               className="bg-custom-primary text-custom-bg shadow-lg hover:opacity-90 rounded-full w-12 h-12 sm:w-14 sm:h-14 p-0"
             >

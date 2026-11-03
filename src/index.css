@@ -237,3 +237,41 @@ html {
     scroll-behavior: auto !important;
   }
 }
+
+/* driver.js tour, themed with the active palette */
+.driver-popover.colors-tour {
+  background-color: rgb(var(--custom-bg));
+  color: rgb(var(--custom-text));
+  border: 1px solid rgb(var(--custom-border));
+  border-radius: 0.75rem;
+  box-shadow: 0 20px 40px -12px rgb(var(--custom-primary) / 0.35);
+  font-family: var(--custom-font-family);
+  padding: 1.1rem;
+}
+.driver-popover.colors-tour .driver-popover-title {
+  font-size: 1rem;
+  font-weight: 600;
+}
+.driver-popover.colors-tour .driver-popover-description,
+.driver-popover.colors-tour .driver-popover-progress-text {
+  color: rgb(var(--custom-text) / 0.7);
+}
+.driver-popover.colors-tour .driver-popover-arrow-side-left.driver-popover-arrow { border-left-color: rgb(var(--custom-bg)); }
+.driver-popover.colors-tour .driver-popover-arrow-side-right.driver-popover-arrow { border-right-color: rgb(var(--custom-bg)); }
+.driver-popover.colors-tour .driver-popover-arrow-side-top.driver-popover-arrow { border-top-color: rgb(var(--custom-bg)); }
+.driver-popover.colors-tour .driver-popover-arrow-side-bottom.driver-popover-arrow { border-bottom-color: rgb(var(--custom-bg)); }
+.driver-popover.colors-tour footer button {
+  border-radius: 0.5rem;
+  border: 1px solid rgb(var(--custom-border));
+  background: transparent;
+  color: rgb(var(--custom-text));
+  text-shadow: none;
+  font-family: inherit;
+  padding: 0.35rem 0.8rem;
+}
+.driver-popover.colors-tour .driver-popover-next-btn {
+  background: rgb(var(--custom-primary));
+  border-color: rgb(var(--custom-primary));
+  color: rgb(var(--custom-primary-contrast));
+}
+.driver-popover.colors-tour .driver-popover-close-btn { color: rgb(var(--custom-text) / 0.6); background: transparent; border: 0; outline: 0; }
